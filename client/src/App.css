@@ -1,48 +1,86 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-div, button {
+div,
+button {
   margin: 10px;
 }
-#lyrics-text{
+#lyrics-text {
   white-space: pre-wrap;
-  overflow-y:scroll;
-  height:300px;
-  width:100%;
+  overflow-y: scroll;
+  height: 300px;
+  width: 100%;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+}
+
+#lyrics-text {
+  white-space: pre-wrap;
+  overflow-y: scroll;
+  height: 300px;
+  width: 100%;
+  display: inline-block;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  background: #006400;
+  height: 100px;
+  width: 100%;
+}
+
+nav h1 {
+  color: white;
+  display: inline-block;
+  font-size: 55px;
+  line-height: 80px;
+  padding: 10 100px;
+  /* padding-bottom: 10px; */
+  font-weight: bold;
+}
+
+nav p {
+  color: white;
+  font-size: 15px;
+  display: inline-block;
+  /* line-height: 80px; */
+  /* padding: 0 100px; */
+  font-weight: bold;
+}
+
+nav ul {
+  float: right;
+  /* font-size: 30px; */
+  margin-right: 20px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+nav ul li {
+  /* background-color: black; */
+  cursor: pointer;
+  display: inline-block;
+  line-height: 80px;
+  margin: 0 5px;
+  flex: auto;
+  text-align: center;
+  margin-right: 20px;
+}
+
+nav ul li :hover {
+  background-color: white;
+  color: black;
+}
+
+nav ul li a {
+  color: white;
+  font-size: 20px;
 }
