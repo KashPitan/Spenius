@@ -10,8 +10,12 @@ const Navbar = () => {
 
   return (
     <nav>
-      <h1>Sponius? Genify?</h1>
-      <p>Spotify lyrics using genius</p>
+      <div className="header-text">
+        <h1>Sponius? Genify?</h1>
+        <br></br>
+        <p>Spotify lyrics using genius</p>
+      </div>
+
       <ul>
         <li>
           <a href="http://localhost:8888"> Login</a>
