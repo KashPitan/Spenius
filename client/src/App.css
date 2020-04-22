@@ -2,6 +2,18 @@ div,
 button {
   margin: 10px;
 }
+
+.header-text {
+  display: inline-block;
+}
+.header-text p {
+  text-align: center;
+}
+
+.header-text h1 {
+  text-align: center;
+}
+
 #lyrics-text {
   white-space: pre-wrap;
   overflow-y: scroll;
@@ -39,7 +51,7 @@ nav h1 {
   color: white;
   display: inline-block;
   font-size: 55px;
-  line-height: 80px;
+  /* line-height: 80px; */
   padding: 10 100px;
   /* padding-bottom: 10px; */
   font-weight: bold;
@@ -48,7 +60,7 @@ nav h1 {
 nav p {
   color: white;
   font-size: 15px;
-  display: inline-block;
+  /* display: inline-block; */
   /* line-height: 80px; */
   /* padding: 0 100px; */
   font-weight: bold;
@@ -68,7 +80,7 @@ nav ul li {
   /* background-color: black; */
   cursor: pointer;
   display: inline-block;
-  line-height: 80px;
+  line-height: 100px;
   margin: 0 5px;
   flex: auto;
   text-align: center;
@@ -83,4 +95,5 @@ nav ul li :hover {
 nav ul li a {
   color: white;
   font-size: 20px;
+  font-family: Arial;
 }

@@ -6,7 +6,7 @@ const SavedLyrics = (props) => {
   return (
     <div>
       {props.lyricObjects.map((lyricObj) => (
-        <SavedLyricObject savedLyricObject={lyricObj} />
+        <SavedLyricObject key={lyricObj.id} savedLyricObject={lyricObj} />
       ))}
     </div>
   );

@@ -1,18 +1,13 @@
-import React, {
-  Component,
-  useContext,
-  useReducer,
-  useState,
-  useEffect,
-} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import SpotifyWebApi from "spotify-web-api-js";
 import axios from "axios";
-import Context from "./Context/Context";
+import uuid from "uuid/v1";
 import Lyrics from "./Components/Lyrics";
 import Navbar from "./Components/Layout/Navbar";
 import NowPlaying from "./Components/NowPlaying";
 import SavedLyrics from "./Components/SavedLyrics";
+import State from "./Context/State";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -40,22 +35,22 @@ const App = () => {
 
   const [loggedIn, setLoggedIn] = useState(token ? true : false);
   const [isSongPlaying, setIsSongPlaying] = useState(false);
-  const [nowPlaying, setNowPlaying] = useState({
-    name: "Not Checked",
-    albumArt: "",
-    artist: "",
-    albumName: "",
-  });
+
   const [lyrics, setLyrics] = useState("");
   const [savedLyrics, setSavedLyrics] = useState([]);
-  const [geniusUrl, setGeniusUrl] = useState(null);
   const [user, setUser] = useState({});
+
+  const geniusUrlRef = useRef(null);
+  const [geniusUrl, setGeniusUrl] = useState(null);
+
+  const nowPlaying2 = useRef({});
+  const [nowPlaying, setNowPlaying] = useState({});
 
   const state = {
     loggedIn: token ? true : false,
     isSongPlaying: false,
     nowPlaying: {
-      name: "Not Checked",
+      name: "",
       albumArt: "",
       artist: "",
       albumName: "",
@@ -66,30 +61,25 @@ const App = () => {
     user: {},
   };
 
-  //auto loads lyrics and current track when the page opens
-  const componentDidMount = () => {
-    if (this.state.loggedIn) {
-      updateLoop();
-      getUserData();
-    }
-  };
-
   useEffect(() => {
-    if (this.state.loggedIn) {
-      updateLoop();
+    if (loggedIn) {
+      setInterval(() => {
+        // console.log("test");
+        getNowPlaying();
+      }, 5000);
       getUserData();
     }
-  });
+    //eslint-disable-next-line
+  }, []);
 
-  const updateLoop = () => {
-    setInterval(() => {
-      getNowPlaying();
-    }, 5000);
-  };
+  // useEffect(() => {
+  //   getGeniusUrl();
+  // }, [nowPlaying]);
 
   const getGeniusUrl = () => {
     const searchTerms =
-      this.state.nowPlaying.name + " " + this.state.nowPlaying.artist;
+      nowPlaying2.current.name + " " + nowPlaying2.current.artist;
+    console.log(searchTerms);
 
     axios
       .get("http://localhost:8888/lyrics/genius/search", {
@@ -97,33 +87,33 @@ const App = () => {
           searchTerm: searchTerms,
         },
       })
-      .then((response) => {
-        console.log(response.data);
-        //replace
-        this.setState({ geniusUrl: response.data });
-        setGeniusUrl(response.data);
-        getLyrics2();
+      .then(function (response) {
+        // console.log(response.data);
+        // setGeniusUrl(response.data);
+        geniusUrlRef.current = response.data;
+        console.log(geniusUrlRef.current);
+        getLyrics();
       })
       .catch(function (err) {
         console.log(err);
       });
+
+    // getLyrics();
   };
 
-  const getLyrics2 = () => {
+  const getLyrics = () => {
     axios
       .get("http://localhost:8888/lyrics/scrape", {
         params: {
-          url: this.state.geniusUrl,
+          url: geniusUrlRef.current,
         },
       })
       .then((response) => {
-        //replace
-        this.setState({ lyrics: response.data });
         setLyrics(response.data);
-        // console.log(response.data);
+        console.log(response.data);
       })
       .catch(function (err) {
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -133,10 +123,7 @@ const App = () => {
       spotifyApi
         .getMe()
         .then((response) => {
-          console.log(response);
-
-          //replace
-          this.setState({ user: response });
+          // console.log(response);
           setUser(response);
         })
         .catch(() => {
@@ -145,8 +132,10 @@ const App = () => {
     }
   };
 
-  const saveLyrics = (e) => {
+  const saveLyrics = () => {
     // var lyrics = window.getSelection().toString();
+
+    //sets variable to store text user highlights on page
     var selected = "";
     if (window.getSelection) {
       selected = window.getSelection();
@@ -158,67 +147,79 @@ const App = () => {
     // console.log(selected.toString());
     selected = selected.toString();
 
-    //replace
-    this.setState({
-      savedLyrics: [
-        ...this.state.savedLyrics,
-        {
-          lyrics: selected,
-          artist: this.state.nowPlaying.artist,
-          song: this.state.nowPlaying.name,
-          album: this.state.nowPlaying.albumName,
-        },
-      ],
-    });
+    //deselects text when user clicks button
+    if (window.getSelection) {
+      window.getSelection().removeAllRanges();
+    } else if (document.selection) {
+      document.selection.empty();
+    }
+
+    //adds new lyric object with saved lyrics to array
     setSavedLyrics([
       ...savedLyrics,
       {
+        id: uuid(),
         lyrics: selected,
-        artist: this.state.nowPlaying.artist,
-        song: this.state.nowPlaying.name,
-        album: this.state.nowPlaying.albumName,
+        artist: nowPlaying.artist,
+        song: nowPlaying.name,
+        album: nowPlaying.album,
       },
     ]);
-    console.log(this.state.savedLyrics);
   };
 
   const getNowPlaying = () => {
+    var song = {};
     spotifyApi
       .getMyCurrentPlaybackState()
       .then((response) => {
-        this.setState({
-          isSongPlaying: true,
-          nowPlaying: {
-            name: response.item.name,
-            albumArt: response.item.album.images[0].url,
-            artist: response.item.artists[0].name,
-            album: response.item.album.name,
-          },
-        });
-        getGeniusUrl();
+        // console.log(response);
+        // console.log("test get now playing");
+
+        song = {
+          name: response.item.name,
+          albumArt: response.item.album.images[0].url,
+          artist: response.item.artists[0].name,
+          album: response.item.album.name,
+        };
+
+        if (JSON.stringify(nowPlaying2.current) !== JSON.stringify(song)) {
+          console.log("new song");
+          setNowPlaying(song);
+          nowPlaying2.current = song;
+          getGeniusUrl();
+        }
+        setIsSongPlaying(true);
+        // console.log(isSongPlaying);
+        // getGeniusUrl();
       })
       .catch(() => {
         console.log("no song playing");
-        this.setState({ isSongPlaying: false });
+        setIsSongPlaying(false);
       });
   };
 
-  const { lyrics2, nowPlaying2, loggedIn2, geniusUrl2 } = state;
   return (
     <>
-      <Navbar />
-      <NowPlaying nowPlaying={nowPlaying2} />
-      <Lyrics lyrics={lyrics2} />
-      <SavedLyrics lyricObjects={state.savedLyrics} test={"adsad"} />
-      <button onClick={() => saveLyrics()}>save lyrics</button>
-      {/* lyricObjects={this.state.savedLyrics} */}
-      {/* 
-        {loggedIn && (
-          <button onClick={() => this.getLyrics2()}>Update Lyrics2</button>
-        )}
-        {loggedIn && (
-          <button onClick={() => this.getGeniusUrl()}>geniusurl</button>
-        )} */}
+      <State>
+        <Navbar />
+        <NowPlaying nowPlaying={nowPlaying} />
+        <Lyrics lyrics={lyrics} />
+        <SavedLyrics lyricObjects={savedLyrics} test={"adsad"} />
+        <button onClick={() => saveLyrics()}>save lyrics</button>
+
+        {/* {loggedIn && (
+        <button
+          onClick={() => {
+            console.log(nowPlaying);
+          }}
+        >
+          nowPlaying
+        </button>
+      )} */}
+
+        {/* {loggedIn && <button onClick={() => getLyrics()}>Update Lyrics2</button>}
+      {loggedIn && <button onClick={() => getGeniusUrl()}>geniusurl</button>} */}
+      </State>
     </>
   );
 };
