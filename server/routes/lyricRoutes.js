@@ -34,7 +34,7 @@ Router.get("/genius/search", function (req, res, next) {
   genius
     .search(searchTerm)
     .then(function (response) {
-      console.log("hits", response.hits[0]);
+      // console.log("hits", response.hits[0]);
       res.send(response.hits[0].result.url);
     })
     .catch(function (err) {

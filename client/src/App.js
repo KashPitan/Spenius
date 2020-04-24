@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import "./App.css";
 import SpotifyWebApi from "spotify-web-api-js";
 import axios from "axios";
@@ -8,6 +8,8 @@ import Navbar from "./Components/Layout/Navbar";
 import NowPlaying from "./Components/NowPlaying";
 import SavedLyrics from "./Components/SavedLyrics";
 import State from "./Context/State";
+import Context from "./Context/Context";
+// import Listener from "./Listener";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -23,12 +25,19 @@ const getHashParams = () => {
   }
   return hashParams;
 };
+//setup access token
+const params = getHashParams();
+const token = params.access_token;
 
 const App = () => {
-  const params = getHashParams();
-  const token = params.access_token;
-  // const userContext = useContext(Context);
+  const context = useContext(Context);
+  // console.log(context.token);
+  // console.log(context.user);
 
+  //passes created access token to index.html script
+  // window.spotifyToken = token;
+
+  //if the token has been created then set up the api access token
   if (token) {
     spotifyApi.setAccessToken(token);
   }
@@ -45,36 +54,43 @@ const App = () => {
 
   const nowPlaying2 = useRef({});
   const [nowPlaying, setNowPlaying] = useState({});
-
-  const state = {
-    loggedIn: token ? true : false,
-    isSongPlaying: false,
-    nowPlaying: {
-      name: "",
-      albumArt: "",
-      artist: "",
-      albumName: "",
-    },
-    lyrics: "",
-    savedLyrics: [],
-    geniusUrl: null,
-    user: {},
-  };
+  var currentSong = useRef({});
 
   useEffect(() => {
+    // console.log(window.state);
     if (loggedIn) {
       setInterval(() => {
         // console.log("test");
+        getUserData();
         getNowPlaying();
       }, 5000);
-      getUserData();
     }
     //eslint-disable-next-line
   }, []);
 
-  // useEffect(() => {
-  //   getGeniusUrl();
-  // }, [nowPlaying]);
+  const checkForPlayer = () => {
+    const player = new window.Spotify.Player({
+      name: "Spenius",
+      getOAuthToken: (cb) => {
+        cb(token);
+      },
+    });
+
+    player.addListener("ready", ({ device_id }) => {
+      console.log("Ready with Device ID", device_id);
+    });
+
+    console.log("check for player");
+    player.addListener("player_state_changed", (state) => {
+      console.log(state);
+    });
+
+    player.connect().then((success) => {
+      if (success) {
+        console.log("Connected to Spenius");
+      }
+    });
+  };
 
   const getGeniusUrl = () => {
     const searchTerms =
@@ -110,7 +126,7 @@ const App = () => {
       })
       .then((response) => {
         setLyrics(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       })
       .catch(function (err) {
         // console.log(err);
@@ -123,8 +139,7 @@ const App = () => {
       spotifyApi
         .getMe()
         .then((response) => {
-          // console.log(response);
-          setUser(response);
+          context.getUserData(response);
         })
         .catch(() => {
           console.log("user not found");
@@ -183,6 +198,7 @@ const App = () => {
         };
 
         if (JSON.stringify(nowPlaying2.current) !== JSON.stringify(song)) {
+          context.setNowPlaying(song);
           console.log("new song");
           setNowPlaying(song);
           nowPlaying2.current = song;
@@ -200,26 +216,23 @@ const App = () => {
 
   return (
     <>
-      <State>
-        <Navbar />
-        <NowPlaying nowPlaying={nowPlaying} />
-        <Lyrics lyrics={lyrics} />
-        <SavedLyrics lyricObjects={savedLyrics} test={"adsad"} />
-        <button onClick={() => saveLyrics()}>save lyrics</button>
-
-        {/* {loggedIn && (
+      <Navbar />
+      <NowPlaying nowPlaying={nowPlaying} />
+      <Lyrics lyrics={lyrics} />
+      <SavedLyrics lyricObjects={savedLyrics} test={"adsad"} />
+      <button onClick={() => context.saveLyrics()}>save lyrics</button>
+      {loggedIn && (
         <button
           onClick={() => {
-            console.log(nowPlaying);
+            checkForPlayer();
           }}
         >
-          nowPlaying
+          check for player
         </button>
-      )} */}
-
-        {/* {loggedIn && <button onClick={() => getLyrics()}>Update Lyrics2</button>}
+      )}
+      {/* {loggedIn && <button onClick={() => getLyrics()}>Update Lyrics2</button>}
       {loggedIn && <button onClick={() => getGeniusUrl()}>geniusurl</button>} */}
-      </State>
+      {/* {loggedIn && <button onClick={() => getNowPlaying()}>nowplaying</button>} */}
     </>
   );
 };

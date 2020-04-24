@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
+import Context from "../Context/Context";
 
 const NowPlaying = ({ nowPlaying }) => {
+  const context = useContext(Context);
+  console.log(context.NowPlaying);
   return (
     <div>
       <p>
