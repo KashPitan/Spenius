@@ -79,7 +79,7 @@ const App = () => {
   const getGeniusUrl = () => {
     const searchTerms =
       nowPlaying2.current.name + " " + nowPlaying2.current.artist;
-    console.log(searchTerms);
+    // console.log(searchTerms);
 
     axios
       .get("http://localhost:8888/lyrics/genius/search", {
@@ -91,7 +91,7 @@ const App = () => {
         // console.log(response.data);
         // setGeniusUrl(response.data);
         geniusUrlRef.current = response.data;
-        console.log(geniusUrlRef.current);
+        // console.log(geniusUrlRef.current);
         getLyrics();
       })
       .catch(function (err) {
@@ -110,7 +110,7 @@ const App = () => {
       })
       .then((response) => {
         setLyrics(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       })
       .catch(function (err) {
         // console.log(err);
@@ -200,26 +200,15 @@ const App = () => {
 
   return (
     <>
-      <State>
-        <Navbar />
+      <Navbar />
+      <div className="container">
         <NowPlaying nowPlaying={nowPlaying} />
         <Lyrics lyrics={lyrics} />
-        <SavedLyrics lyricObjects={savedLyrics} test={"adsad"} />
-        <button onClick={() => saveLyrics()}>save lyrics</button>
+      </div>
+      <SavedLyrics lyricObjects={savedLyrics} test={"adsad"} />
 
-        {/* {loggedIn && (
-        <button
-          onClick={() => {
-            console.log(nowPlaying);
-          }}
-        >
-          nowPlaying
-        </button>
-      )} */}
-
-        {/* {loggedIn && <button onClick={() => getLyrics()}>Update Lyrics2</button>}
-      {loggedIn && <button onClick={() => getGeniusUrl()}>geniusurl</button>} */}
-      </State>
+      <button onClick={() => saveLyrics()}>save lyrics</button>
+      {/* {loggedIn && <button onClick={() => getLyrics()}>Update Lyrics2</button>*/}
     </>
   );
 };
