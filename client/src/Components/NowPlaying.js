@@ -2,17 +2,21 @@ import React from "react";
 
 const NowPlaying = ({ nowPlaying }) => {
   return (
-    <div>
-      <p>
-        <strong>{nowPlaying.name}</strong>
-      </p>
-      <p>By: {nowPlaying.artist}</p>
-      <p>Album: {nowPlaying.album}</p>
+    <>
+      <div className="nowPlaying">
+        <div className="nowPlayingImage">
+          <img src={nowPlaying.albumArt} style={{ height: 150 }} />
+        </div>
 
-      <div>
-        <img src={nowPlaying.albumArt} style={{ height: 150 }} />
+        <div className="nowPlayingText">
+          <p>
+            <strong>{nowPlaying.name}</strong>
+          </p>
+          <p>By: {nowPlaying.artist}</p>
+          <p>Album: {nowPlaying.album}</p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
