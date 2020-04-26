@@ -5,6 +5,7 @@ import axios from "axios";
 import uuid from "uuid/v1";
 import Lyrics from "./Components/Lyrics";
 import Navbar from "./Components/Layout/Navbar";
+import Navbar2 from "./Components/Layout/Navbar2";
 import NowPlaying from "./Components/NowPlaying";
 import SavedLyrics from "./Components/SavedLyrics";
 import State from "./Context/State";
@@ -35,6 +36,7 @@ const App = () => {
 
   const [loggedIn, setLoggedIn] = useState(token ? true : false);
   const [isSongPlaying, setIsSongPlaying] = useState(false);
+  const isSongPlayingBool = useRef(false);
 
   const [lyrics, setLyrics] = useState("");
   const [savedLyrics, setSavedLyrics] = useState([]);
@@ -46,28 +48,13 @@ const App = () => {
   const nowPlaying2 = useRef({});
   const [nowPlaying, setNowPlaying] = useState({});
 
-  const state = {
-    loggedIn: token ? true : false,
-    isSongPlaying: false,
-    nowPlaying: {
-      name: "",
-      albumArt: "",
-      artist: "",
-      albumName: "",
-    },
-    lyrics: "",
-    savedLyrics: [],
-    geniusUrl: null,
-    user: {},
-  };
-
   useEffect(() => {
     if (loggedIn) {
       setInterval(() => {
         // console.log("test");
         getNowPlaying();
       }, 5000);
-      getUserData();
+      // getUserData();
     }
     //eslint-disable-next-line
   }, []);
@@ -188,26 +175,37 @@ const App = () => {
           nowPlaying2.current = song;
           getGeniusUrl();
         }
-        setIsSongPlaying(true);
-        // console.log(isSongPlaying);
+        isSongPlayingBool.current = true;
+        console.log(isSongPlaying);
         // getGeniusUrl();
       })
       .catch(() => {
         console.log("no song playing");
-        setIsSongPlaying(false);
+        isSongPlayingBool.current = false;
       });
   };
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
+      <Navbar2 />
+      <hr></hr>
       <div className="container">
-        <NowPlaying nowPlaying={nowPlaying} />
+        <div className="nowPlaying-savedLyrics">
+          <NowPlaying
+            nowPlaying={nowPlaying}
+            isPlaying={isSongPlayingBool.current}
+          />
+          <div className="savedLyrics2">
+            <h1>Saved Lyrics</h1>
+            <SavedLyrics lyricObjects={savedLyrics} test={"adsad"} />
+          </div>
+          <button onClick={() => saveLyrics()}>save lyrics</button>
+        </div>
+
         <Lyrics lyrics={lyrics} />
       </div>
-      <SavedLyrics lyricObjects={savedLyrics} test={"adsad"} />
 
-      <button onClick={() => saveLyrics()}>save lyrics</button>
       {/* {loggedIn && <button onClick={() => getLyrics()}>Update Lyrics2</button>*/}
     </>
   );

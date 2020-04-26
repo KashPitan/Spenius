@@ -1,21 +1,27 @@
 import React from "react";
 
-const NowPlaying = ({ nowPlaying }) => {
+const NowPlaying = ({ nowPlaying, isPlaying }) => {
   return (
     <>
-      <div className="nowPlaying">
-        <div className="nowPlayingImage">
-          <img src={nowPlaying.albumArt} style={{ height: 150 }} />
-        </div>
+      {isPlaying ? (
+        <div className="nowPlaying">
+          <div id="nowPlayingSongInfo">
+            <div className="nowPlayingImage">
+              <img src={nowPlaying.albumArt} style={{ height: 150 }} />
+            </div>
 
-        <div className="nowPlayingText">
-          <p>
-            <strong>{nowPlaying.name}</strong>
-          </p>
-          <p>By: {nowPlaying.artist}</p>
-          <p>Album: {nowPlaying.album}</p>
+            <div className="nowPlayingText">
+              <p id="currentTitle">
+                <strong>{nowPlaying.name}</strong>
+              </p>
+              <p id="currentArtist">By: {nowPlaying.artist}</p>
+              <p id="currentAlbum">Album: {nowPlaying.album}</p>
+            </div>
+          </div>
         </div>
-      </div>
+      ) : (
+        <p>Song will display here when playing</p>
+      )}
     </>
   );
 };

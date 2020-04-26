@@ -1,8 +1,22 @@
 * {
-  /* padding: 0;
-  margin: 0; */
   text-decoration: none;
   list-style: none;
+}
+
+*::-webkit-scrollbar {
+  background: var(--bg-dark);
+  border-radius: 20px;
+  width: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 20px;
+}
+
+*::selection {
+  background: var(--bg-tertiary);
+  outline: white solid;
 }
 
 :root {
@@ -11,20 +25,19 @@
   --bg-primary: #003e3e;
   --bg-secondary: #007c7c;
   --bg-tertiary: #00baba;
+  --bg-dark: #002626;
+  --text-highlight: #baf8f8;
+  --text-highlight2: #5cffff;
 }
 
 body {
   margin: 0;
   padding: 0;
   color: black;
-  background-color: white;
+  /* background-color: #ededed; */
+  background-color: var(--bg-dark);
+  /* text-emphasis-color: white; */
 }
-
-/* main {
-  margin-top: 20px;
-  margin-left: 50rem;
-  padding: 1rem;
-} */
 
 nav {
   background: var(--bg-primary);
@@ -39,6 +52,15 @@ nav ul {
 nav a {
   color: white;
   text-decoration: none;
+}
+
+/* makes text white */
+.container {
+  display: flex;
+  max-width: 1000px;
+  margin: auto;
+  padding-top: 30px;
+  color: white;
 }
 
 .menu {
@@ -76,35 +98,75 @@ nav a {
   text-align: center;
 }
 
-.container {
-  display: flex;
-}
-
 .lyrics-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-self: center;
-  /* align-items: center;  */
   flex-grow: 1;
 }
 .lyrics {
-  /* align-self: center; */
-  /* flex-grow: 2; */
-  overflow-y: hidden;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.lyrics h1 {
+  padding-bottom: 15px;
+  text-align: center;
 }
 
 .nowPlaying {
   display: flex;
   margin: 10px;
-  /* flex-grow: 1; */
+  padding: 10px;
+  height: 150px;
+  align-self: flex-start;
+  background-color: var(--bg-secondary);
+  /* background-image: -moz-repeating-linear-gradient(); */
+  /* opacity: 0.5; */
 }
+
+/* .nowPlaying:hover {
+  background-color: var(--bg-tertiary);
+  color: white;
+} */
 
 .savedLyrics {
   flex-grow: 1;
   flex-wrap: wrap;
   font-family: Arial, Helvetica, sans-serif;
+  /* overflow: auto; */
+}
+
+.savedLyrics2 {
+  overflow: auto;
+  height: 600px;
+}
+
+.savedLyricObject {
+  margin-top: 10px;
+  padding: 10px;
+  /* text-overflow: '..."'; */
+}
+
+.savedLyricObject i {
+  overflow: hidden;
+  /* white-space: nowrap; */
+  /* text-overflow: "test"; */
+  /* max-lines: 2; */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+
+.savedLyricObject p {
+  font-weight: bold;
+  color: var(--text-highlight);
+}
+
+.nowPlaying-savedLyrics {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
 }
 
 .nowPlayingText {
@@ -117,25 +179,45 @@ nav a {
   margin: 0;
 }
 
+#currentTitle {
+  /* color: var(--text-highlight2); */
+  font-weight: bolder;
+  text-decoration: underline;
+  color: white;
+}
+
+#currentAlbum {
+  color: var(--text-highlight);
+}
+
+#currentArtist {
+  color: var(--text-highlight);
+}
+
 .nowPlayingImage {
   display: inline-block;
 }
 
-#lyrics-text {
-  overflow-y: hidden;
-  white-space: pre-wrap;
-  overflow-y: scroll;
-  height: 300px;
+#nowPlayingSongInfo {
+  display: flex;
+  /* height: 0%; */
   /* display: inline-block; */
 }
-/* 
-.lyrics-container {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  justify-content: center;
-  align-items: center;
-} */
+
+#lyrics-text {
+  overflow-y: auto;
+  white-space: pre-wrap;
+  text-align: center;
+  height: 800px;
+  font-size: 1.08rem;
+  max-width: 600px;
+}
+
+button {
+  border-radius: 25px;
+  color: white;
+  background-color: var(--bg-secondary);
+}
 
 nav h1 {
   margin: 5px;
@@ -152,33 +234,3 @@ nav p {
   font-size: 1rem;
   font-weight: bold;
 }
-
-/* nav ul {
-  float: right;
-  margin-right: 20px;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: space-around;
-} */
-/* 
-nav ul li {
-  cursor: pointer;
-  display: inline-block;
-  line-height: 100px;
-  margin: 0 5px;
-  flex: auto;
-  text-align: center;
-  margin-right: 20px;
-}
-
-nav ul li :hover {
-  background-color: white;
-  color: black;
-}
-
-nav ul li a {
-  color: white;
-  font-size: 20px;
-  font-family: Arial;
-} */
