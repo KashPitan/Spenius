@@ -78,7 +78,7 @@ nav a {
   max-width: 1000px;
   margin: auto;
   padding-top: 30px;
-  height: 87vh;
+  height: 87.5vh;
   padding: 20px;
   color: white;
   background-color: var(--bg-dark);
@@ -90,7 +90,7 @@ nav a {
   max-width: 1000px;
   margin: auto;
   padding-top: 30px;
-  height: 87vh;
+  height: 87.5vh;
   padding: 20px;
   color: white;
   background-color: var(--bg-dark);
@@ -235,6 +235,13 @@ nav a {
   display: flex;
   /* height: 0%; */
   /* display: inline-block; */
+}
+
+#nonePlayingText {
+  vertical-align: middle;
+  display: block;
+  /* margin:0;
+  padding:0; */
 }
 
 #lyrics-text {

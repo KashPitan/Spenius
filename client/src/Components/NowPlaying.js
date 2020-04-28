@@ -20,7 +20,9 @@ const NowPlaying = ({ nowPlaying, isPlaying }) => {
           </div>
         </div>
       ) : (
-        <p>Song will display here when playing</p>
+        <div className="nowPlaying">
+          <p id="nonePlayingText">Song will display here when playing</p>
+        </div>
       )}
     </>
   );

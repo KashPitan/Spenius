@@ -58,7 +58,7 @@ const App = () => {
     if (loggedIn) {
       setInterval(() => {
         getNowPlaying();
-      }, 5000);
+      }, 2000);
     }
     //eslint-disable-next-line
   }, []);
