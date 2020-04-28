@@ -1,4 +1,9 @@
-import { SAVE_LYRICS, NONE_SELECTED_ALERT } from "../Context/Types";
+import {
+  SAVE_LYRICS,
+  NONE_SELECTED_ALERT,
+  CLEAR_LYRICS,
+  DELETE_LYRIC_ITEM,
+} from "../Context/Types";
 import Context from "./Context";
 import React, { useReducer } from "react";
 import Reducer from "./Reducer";
@@ -52,13 +57,21 @@ const State = (props) => {
     }
   };
 
+  const clearLyrics = () => {
+    dispatch({ type: CLEAR_LYRICS, payload: null });
+  };
+
+  const deleteLyricObject = (id) => {
+    dispatch({ type: DELETE_LYRIC_ITEM, payload: id });
+  };
+
   const showAlert = () => {
     dispatch({
       type: NONE_SELECTED_ALERT,
       payload: !state.noneSelectedAlert,
     });
 
-    setInterval(() => {
+    setTimeout(() => {
       dispatch({
         type: NONE_SELECTED_ALERT,
         payload: !state.noneSelectedAlert,
@@ -71,6 +84,8 @@ const State = (props) => {
       value={{
         savedLyrics: state.savedLyrics,
         saveLyrics,
+        clearLyrics,
+        deleteLyricObject,
       }}
     >
       {props.children}

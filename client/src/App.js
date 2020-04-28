@@ -79,15 +79,16 @@ const App = () => {
     var name = refineSearchTerms(nowPlaying2.current.name);
     var artist = nowPlaying2.current.artist;
 
-    console.log(name, artist);
-    console.log(nowPlaying2.current.name, nowPlaying2.current.artist);
+    // console.log(name, artist);
+    // console.log(nowPlaying2.current.name, nowPlaying2.current.artist);
 
     const searchTerms = name + " " + artist;
     const searchTerms2 =
       nowPlaying2.current.name + " " + nowPlaying2.current.artist;
 
-    console.log(searchTerms);
-    console.log(searchTerms2);
+    // console.log(searchTerms);
+    // console.log(searchTerms2);
+
     axios
       .get("http://localhost:8888/lyrics/genius/search", {
         params: {
@@ -171,7 +172,7 @@ const App = () => {
                     <button
                       onClick={() => context.saveLyrics(nowPlaying2.current)}
                     >
-                      save lyrics
+                      Save Lyrics
                     </button>
                     {context.noneSelectedAlert && (
                       <p>Text selection cannot be empty!</p>
@@ -195,6 +196,9 @@ const App = () => {
                     <hr></hr>
                   </div>
                   <SavedLyricsMain />
+                  <button onClick={() => context.clearLyrics()}>
+                    Clear Lyrics
+                  </button>
                 </div>
               </Fragment>
             )}
