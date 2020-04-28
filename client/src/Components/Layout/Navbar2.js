@@ -1,16 +1,14 @@
-import React, { useContext } from "react";
-import SpotifyWebApi from "spotify-web-api-js";
-import Context from "../../Context/Context";
+import React from "react";
 import "../../navbar2.css";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  // const { user, loggedIn } = useContext(Context);
-  const spotifyApi = new SpotifyWebApi();
-
   return (
     <>
       <header>
+        <div id="header-icon">
+          <i className="fas fa-headphones"></i>
+        </div>
         <div className="header-text">
           <h1>Sponius? Genify? SPENIUS???</h1>
           <br></br>
@@ -19,16 +17,19 @@ const Navbar = () => {
         <nav className="navbar2">
           <ul className="nav_links">
             <li>
-              <a href="http://localhost:8888"> Login</a>
+              <a href="http://localhost:8888/login"> Login</a>
             </li>
             <li>
-              <a href="">Home</a>
+              {/* <a href="/">Home</a> */}
+              <Link to="/">Home</Link>
             </li>
             <li>
-              <a href="">Saved Lyrics</a>
+              {/* <a href="">Saved Lyrics</a> */}
+              <Link to="/lyrics">Saved Lyrics</Link>
             </li>
             <li>
-              <a href="">About</a>
+              {/* <a href="/about">About</a> */}
+              <Link to="/about">About</Link>
             </li>
           </ul>
         </nav>

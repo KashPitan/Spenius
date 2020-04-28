@@ -1,14 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  Fragment,
+  useContext,
+} from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
 import SpotifyWebApi from "spotify-web-api-js";
 import axios from "axios";
-import uuid from "uuid/v1";
 import Lyrics from "./Components/Lyrics";
-import Navbar from "./Components/Layout/Navbar";
 import Navbar2 from "./Components/Layout/Navbar2";
 import NowPlaying from "./Components/NowPlaying";
 import SavedLyrics from "./Components/SavedLyrics";
-import State from "./Context/State";
+import SavedLyricsMain from "./Components/SavedLyricsPage/SavedLyricsMain";
+import About from "./Pages/About";
+import Context from "./Context/Context";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -26,24 +33,23 @@ const getHashParams = () => {
 };
 
 const App = () => {
+  const context = useContext(Context);
+
   const params = getHashParams();
   const token = params.access_token;
-  // const userContext = useContext(Context);
 
   if (token) {
     spotifyApi.setAccessToken(token);
   }
 
   const [loggedIn, setLoggedIn] = useState(token ? true : false);
-  const [isSongPlaying, setIsSongPlaying] = useState(false);
+  // const [isSongPlaying, setIsSongPlaying] = useState(false);
   const isSongPlayingBool = useRef(false);
 
   const [lyrics, setLyrics] = useState("");
-  const [savedLyrics, setSavedLyrics] = useState([]);
-  const [user, setUser] = useState({});
 
   const geniusUrlRef = useRef(null);
-  const [geniusUrl, setGeniusUrl] = useState(null);
+  // const [geniusUrl, setGeniusUrl] = useState(null);
 
   const nowPlaying2 = useRef({});
   const [nowPlaying, setNowPlaying] = useState({});
@@ -51,23 +57,37 @@ const App = () => {
   useEffect(() => {
     if (loggedIn) {
       setInterval(() => {
-        // console.log("test");
         getNowPlaying();
       }, 5000);
-      // getUserData();
     }
     //eslint-disable-next-line
   }, []);
 
-  // useEffect(() => {
-  //   getGeniusUrl();
-  // }, [nowPlaying]);
+  //removes characters in brackets from search strings
+  //to improve accuracy of search
+  const refineSearchTerms = (s) => {
+    if (s.includes("(")) {
+      s = s.substring(0, s.indexOf("("));
+    }
+    if (s.includes("-")) {
+      s = s.substring(0, s.indexOf("-"));
+    }
+    return s;
+  };
 
   const getGeniusUrl = () => {
-    const searchTerms =
-      nowPlaying2.current.name + " " + nowPlaying2.current.artist;
-    // console.log(searchTerms);
+    var name = refineSearchTerms(nowPlaying2.current.name);
+    var artist = nowPlaying2.current.artist;
 
+    console.log(name, artist);
+    console.log(nowPlaying2.current.name, nowPlaying2.current.artist);
+
+    const searchTerms = name + " " + artist;
+    const searchTerms2 =
+      nowPlaying2.current.name + " " + nowPlaying2.current.artist;
+
+    console.log(searchTerms);
+    console.log(searchTerms2);
     axios
       .get("http://localhost:8888/lyrics/genius/search", {
         params: {
@@ -75,17 +95,13 @@ const App = () => {
         },
       })
       .then(function (response) {
-        // console.log(response.data);
-        // setGeniusUrl(response.data);
         geniusUrlRef.current = response.data;
-        // console.log(geniusUrlRef.current);
+
         getLyrics();
       })
       .catch(function (err) {
         console.log(err);
       });
-
-    // getLyrics();
   };
 
   const getLyrics = () => {
@@ -104,64 +120,11 @@ const App = () => {
       });
   };
 
-  const getUserData = () => {
-    //only makes an api call to get user data when logged in to avoid errors
-    if (loggedIn) {
-      spotifyApi
-        .getMe()
-        .then((response) => {
-          // console.log(response);
-          setUser(response);
-        })
-        .catch(() => {
-          console.log("user not found");
-        });
-    }
-  };
-
-  const saveLyrics = () => {
-    // var lyrics = window.getSelection().toString();
-
-    //sets variable to store text user highlights on page
-    var selected = "";
-    if (window.getSelection) {
-      selected = window.getSelection();
-    } else if (document.getSelection) {
-      selected = document.getSelection();
-    } else if (document.selection) {
-      selected = document.selection.createRange().text;
-    }
-    // console.log(selected.toString());
-    selected = selected.toString();
-
-    //deselects text when user clicks button
-    if (window.getSelection) {
-      window.getSelection().removeAllRanges();
-    } else if (document.selection) {
-      document.selection.empty();
-    }
-
-    //adds new lyric object with saved lyrics to array
-    setSavedLyrics([
-      ...savedLyrics,
-      {
-        id: uuid(),
-        lyrics: selected,
-        artist: nowPlaying.artist,
-        song: nowPlaying.name,
-        album: nowPlaying.album,
-      },
-    ]);
-  };
-
   const getNowPlaying = () => {
     var song = {};
     spotifyApi
       .getMyCurrentPlaybackState()
       .then((response) => {
-        // console.log(response);
-        // console.log("test get now playing");
-
         song = {
           name: response.item.name,
           albumArt: response.item.album.images[0].url,
@@ -169,45 +132,76 @@ const App = () => {
           album: response.item.album.name,
         };
 
+        //checks whether the song returned by the api call is the same as the currnent song
+        //if not it updates the components with the new song
         if (JSON.stringify(nowPlaying2.current) !== JSON.stringify(song)) {
-          console.log("new song");
           setNowPlaying(song);
           nowPlaying2.current = song;
           getGeniusUrl();
         }
         isSongPlayingBool.current = true;
-        console.log(isSongPlaying);
-        // getGeniusUrl();
+        // console.log(isSongPlaying);
       })
       .catch(() => {
-        console.log("no song playing");
         isSongPlayingBool.current = false;
       });
   };
 
   return (
-    <>
-      {/* <Navbar /> */}
-      <Navbar2 />
-      <hr></hr>
-      <div className="container">
-        <div className="nowPlaying-savedLyrics">
-          <NowPlaying
-            nowPlaying={nowPlaying}
-            isPlaying={isSongPlayingBool.current}
+    <Router>
+      <>
+        <Navbar2 />
+        <hr></hr>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={(props) => (
+              <Fragment>
+                <div className="container">
+                  <div className="nowPlaying-savedLyrics">
+                    <NowPlaying
+                      nowPlaying={nowPlaying}
+                      isPlaying={isSongPlayingBool.current}
+                    />
+                    <div className="savedLyrics2">
+                      <h1>Saved Lyrics</h1>
+                      <SavedLyrics />
+                    </div>
+                    <button
+                      onClick={() => context.saveLyrics(nowPlaying2.current)}
+                    >
+                      save lyrics
+                    </button>
+                    {context.noneSelectedAlert && (
+                      <p>Text selection cannot be empty!</p>
+                    )}
+                  </div>
+
+                  <Lyrics lyrics={lyrics} />
+                </div>
+              </Fragment>
+            )}
+          ></Route>
+          <Route exact path="/about" component={About} />
+          <Route
+            exact
+            path="/lyrics"
+            render={(props) => (
+              <Fragment>
+                <div className="container2">
+                  <div id="lyricsPageTitle">
+                    <h1>Saved Lyrics</h1>
+                    <hr></hr>
+                  </div>
+                  <SavedLyricsMain />
+                </div>
+              </Fragment>
+            )}
           />
-          <div className="savedLyrics2">
-            <h1>Saved Lyrics</h1>
-            <SavedLyrics lyricObjects={savedLyrics} test={"adsad"} />
-          </div>
-          <button onClick={() => saveLyrics()}>save lyrics</button>
-        </div>
-
-        <Lyrics lyrics={lyrics} />
-      </div>
-
-      {/* {loggedIn && <button onClick={() => getLyrics()}>Update Lyrics2</button>*/}
-    </>
+        </Switch>
+      </>
+    </Router>
   );
 };
 

@@ -1,64 +1,76 @@
-import {
-  GET_GENIUS_URL,
-  GET_NOW_PLAYING,
-  GET_LYRICS,
-  SAVE_LYRICS,
-  GET_USER_DATA,
-} from "../Context/Types";
+import { SAVE_LYRICS, NONE_SELECTED_ALERT } from "../Context/Types";
 import Context from "./Context";
-import axios from "axios";
 import React, { useReducer } from "react";
 import Reducer from "./Reducer";
-import SpotifyWebApi from "spotify-web-api-js";
-
-const spotifyApi = new SpotifyWebApi();
+import uuid from "uuid/v1";
 
 const State = (props) => {
   const initialState = {
-    loggedIn: false,
-    isSongPlaying: false,
-    nowPlaying: {
-      name: "",
-      albumArt: "",
-      artist: "",
-      albumName: "",
-    },
-    lyrics: "",
+    noneSelectedAlert: false,
     savedLyrics: [],
-    geniusUrl: null,
-    user: {},
   };
   const [state, dispatch] = useReducer(Reducer, initialState);
 
-  const getUserData = () => {
-    //only makes an api call to get user data when logged in to avoid errors
-    if (this.state.loggedIn) {
-      spotifyApi
-        .getMe()
-        .then((response) => {
-          // console.log(response);
-          // setUser(response);
-          dispatch({
-            type: GET_USER_DATA,
-            payload: response,
-          });
-        })
-        .catch(() => {
-          console.log("user not found");
-        });
+  const saveLyrics = (nowPlaying) => {
+    // var lyrics = window.getSelection().toString();
+
+    //sets variable to store text user highlights on page
+    var selected = "";
+    if (window.getSelection) {
+      selected = window.getSelection();
+    } else if (document.getSelection) {
+      selected = document.getSelection();
+    } else if (document.selection) {
+      selected = document.selection.createRange().text;
     }
+
+    selected = selected.toString();
+
+    //deselects text when user clicks button
+    if (window.getSelection) {
+      window.getSelection().removeAllRanges();
+    } else if (document.selection) {
+      document.selection.empty();
+    }
+
+    //only adds lyric if selection is not empty
+    if (selected !== "") {
+      //adds new lyric object with saved lyrics to array
+      dispatch({
+        type: SAVE_LYRICS,
+        payload: {
+          id: uuid(),
+          lyrics: selected,
+          artist: nowPlaying.artist,
+          song: nowPlaying.name,
+          album: nowPlaying.album,
+          albumArt: nowPlaying.albumArt,
+        },
+      });
+    } else {
+      showAlert();
+    }
+  };
+
+  const showAlert = () => {
+    dispatch({
+      type: NONE_SELECTED_ALERT,
+      payload: !state.noneSelectedAlert,
+    });
+
+    setInterval(() => {
+      dispatch({
+        type: NONE_SELECTED_ALERT,
+        payload: !state.noneSelectedAlert,
+      });
+    }, 3000);
   };
 
   return (
     <Context.Provider
       value={{
-        loggedIn: state.loggedIn,
-        isSongPlaying: state.isSongPlaying,
-        nowPlaying: state.nowPlaying,
-        lyrics: state.lyrics,
         savedLyrics: state.savedLyrics,
-        geniusUrl: state.geniusUrl,
-        user: state.user,
+        saveLyrics,
       }}
     >
       {props.children}
