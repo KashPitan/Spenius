@@ -159,11 +159,6 @@ nav a {
   /* opacity: 0.5; */
 }
 
-/* .nowPlaying:hover {
-  background-color: var(--bg-tertiary);
-  color: white;
-} */
-
 .savedLyrics {
   flex-grow: 1;
   flex-wrap: wrap;
@@ -271,6 +266,11 @@ nav p {
   color: white;
   font-size: 1rem;
   font-weight: bold;
+}
+
+hr {
+  background-color: var(--text-highlight);
+  border-color: var(--text-highlight);
 }
 
 #lyricsPageTitle h1 {

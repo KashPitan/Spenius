@@ -17,7 +17,12 @@
 }
 
 .savedLyricObjectMain:hover {
-  background-color: var(--bg-secondary);
+  /* background-color: var(--bg-secondary); */
+}
+
+button:hover {
+  background-color: var(--text-highlight);
+  color: black;
 }
 
 .savedLyricObjectMain p {
@@ -30,10 +35,15 @@
 .savedLyricObjectMain img {
   border-radius: 25px;
 }
+.savedLyrics {
+  overflow: auto;
+}
 
 .savedLyricContent {
+  display: flex;
   padding-left: 10px;
-  vertical-align: middle;
+  /* vertical-align: middle; */
+  align-items: center;
 }
 
 h1 {
