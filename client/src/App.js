@@ -58,7 +58,7 @@ const App = () => {
     if (loggedIn) {
       setInterval(() => {
         getNowPlaying();
-      }, 5000);
+      }, 2000);
     }
     //eslint-disable-next-line
   }, []);
@@ -90,7 +90,7 @@ const App = () => {
     // console.log(searchTerms2);
 
     axios
-      .get("http://localhost:8888/lyrics/genius/search", {
+      .get("http://spenius.herokuapp.com/lyrics/genius/search", {
         params: {
           searchTerm: searchTerms,
         },
@@ -107,7 +107,7 @@ const App = () => {
 
   const getLyrics = () => {
     axios
-      .get("http://localhost:8888/lyrics/scrape", {
+      .get("http://spenius.herokuapp.com/lyrics/scrape", {
         params: {
           url: geniusUrlRef.current,
         },
