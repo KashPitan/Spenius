@@ -9,7 +9,7 @@ const SavedLyricObject = ({
       <em>"{lyrics}"</em>
       <br></br>
       <p>
-        Track: "{song}" from "{album}" by {artist}
+        {artist} ({song})
       </p>
       <hr></hr>
     </div>

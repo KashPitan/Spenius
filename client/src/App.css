@@ -78,7 +78,7 @@ nav a {
   max-width: 1000px;
   margin: auto;
   padding-top: 30px;
-  height: 90vh;
+  height: 87vh;
   padding: 20px;
   color: white;
   background-color: var(--bg-dark);
@@ -90,7 +90,7 @@ nav a {
   max-width: 1000px;
   margin: auto;
   padding-top: 30px;
-  height: 90vh;
+  height: 87vh;
   padding: 20px;
   color: white;
   background-color: var(--bg-dark);
@@ -239,6 +239,8 @@ nav a {
 
 #lyrics-text {
   overflow-y: auto;
+  /* overflow-x: auto; */
+  /* white-space: pre; */
   white-space: pre-wrap;
   text-align: center;
   height: 80vh;
