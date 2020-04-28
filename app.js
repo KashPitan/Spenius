@@ -47,11 +47,6 @@ var stateKey = "spotify_auth_state";
 
 var app = express();
 
-app
-  .use(express.static(__dirname + "/public"))
-  .use(cors())
-  .use(cookieParser());
-
 app.use("/lyrics", LyricRoutes);
 
 //serve static assets if in production
@@ -63,6 +58,11 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
+
+app
+  .use(express.static(__dirname + "/public"))
+  .use(cors())
+  .use(cookieParser());
 
 app.get("/login", function (req, res) {
   var state = generateRandomString(16);

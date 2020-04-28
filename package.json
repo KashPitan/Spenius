@@ -17,6 +17,7 @@
     "request-promise": "^4.2.5"
   },
   "scripts": {
+    "client-install": "npm install --prefix client",
     "start": "node app.js",
     "server": "nodemon app.js",
     "client": "npm start --prefix client",
