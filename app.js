@@ -19,7 +19,7 @@ const path = require("path");
 
 const PORT = proces.env.PORT || 8888;
 
-var LyricRoutes = require("./routes/lyricRoutes");
+var LyricRoutes = require("../routes/lyricRoutes");
 
 var client_id = process.env.CLIENT_ID; // Your client id
 var client_secret = process.env.CLIENT_SECRET; // Your secret
