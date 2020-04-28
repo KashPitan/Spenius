@@ -6,7 +6,6 @@ const SavedLyrics = () => {
   const context = useContext(Context);
   return (
     <>
-      <hr></hr>
       <div className="savedLyrics">
         {context.savedLyrics.map((lyricObj) => (
           <SavedLyricObject key={lyricObj.id} savedLyricObject={lyricObj} />

@@ -13,8 +13,6 @@ export default (state, action) => {
         savedLyrics: [...state.savedLyrics, action.payload],
       };
     case NONE_SELECTED_ALERT:
-      // console.log("none selected");
-
       return {
         ...state,
         noneSelectedAlert: action.payload,

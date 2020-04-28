@@ -165,8 +165,9 @@ const App = () => {
                       nowPlaying={nowPlaying}
                       isPlaying={isSongPlayingBool.current}
                     />
+                    <h1>Saved Lyrics</h1>
+                    <hr></hr>
                     <div className="savedLyrics2">
-                      <h1>Saved Lyrics</h1>
                       <SavedLyrics />
                     </div>
                     <button

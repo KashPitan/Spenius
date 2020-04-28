@@ -19,8 +19,9 @@ const SavedLyricObjectMain = ({
             <em>"{lyrics}"</em>
             {/* <br></br> */}
             <p>
-              "{song}" from "{album}" by {artist}
+              {artist} ({song})
             </p>
+            <p>Album: "{album}"</p>
           </div>
           <div>
             <button onClick={() => context.deleteLyricObject(id)}>

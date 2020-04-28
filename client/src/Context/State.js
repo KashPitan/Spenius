@@ -16,9 +16,24 @@ const State = (props) => {
   };
   const [state, dispatch] = useReducer(Reducer, initialState);
 
-  const saveLyrics = (nowPlaying) => {
-    // var lyrics = window.getSelection().toString();
+  const replaceLineBreaks = (string) => {
+    console.log("test");
+    string = string.replace(/\n/g, " ");
+    return string;
+  };
 
+  const selectText2 = () => {
+    if (window.getSelection) {
+      var range = window.getSelection().getRangeAt(0);
+      var selectionContents = range.cloneContents();
+      return selectionContents;
+    } else if (document.selection && document.selection.type !== "Control") {
+      var contents = document.selection.createRange().cloneContents();
+      return contents;
+    }
+  };
+
+  const selectText = () => {
     //sets variable to store text user highlights on page
     var selected = "";
     if (window.getSelection) {
@@ -38,8 +53,17 @@ const State = (props) => {
       document.selection.empty();
     }
 
+    return selected;
+  };
+
+  const saveLyrics = (nowPlaying) => {
+    var selected = "";
+    selected = selectText();
+
     //only adds lyric if selection is not empty
     if (selected !== "") {
+      // selected = replaceLineBreaks(selected);
+
       //adds new lyric object with saved lyrics to array
       dispatch({
         type: SAVE_LYRICS,
