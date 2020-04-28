@@ -1,18 +1,36 @@
 import {
-  GET_GENIUS_URL,
-  GET_NOW_PLAYING,
-  GET_LYRICS,
   SAVE_LYRICS,
-  GET_USER_DATA,
+  NONE_SELECTED_ALERT,
+  CLEAR_LYRICS,
+  DELETE_LYRIC_ITEM,
 } from "../Context/Types";
 
 export default (state, action) => {
   switch (action.type) {
-    case GET_USER_DATA:
+    case SAVE_LYRICS:
       return {
         ...state,
-        user: action.payload,
+        savedLyrics: [...state.savedLyrics, action.payload],
       };
+    case NONE_SELECTED_ALERT:
+      return {
+        ...state,
+        noneSelectedAlert: action.payload,
+      };
+    case CLEAR_LYRICS:
+      return {
+        ...state,
+        savedLyrics: [],
+      };
+    case DELETE_LYRIC_ITEM:
+      const newSavedLyrics = state.savedLyrics.filter((lyricObj) => {
+        return lyricObj.id !== action.payload;
+      });
+      return {
+        ...state,
+        savedLyrics: newSavedLyrics,
+      };
+
     default:
       return state;
   }

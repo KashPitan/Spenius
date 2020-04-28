@@ -1,0 +1,51 @@
+:root {
+  font-size: 16px;
+  font-family: "Open Sans";
+  --bg-primary: #003e3e;
+  --bg-secondary: #007c7c;
+  --bg-tertiary: #00baba;
+  --bg-dark: #002626;
+  --text-highlight: #baf8f8;
+  --text-highlight2: #5cffff;
+}
+
+.savedLyricObjectMain {
+  display: flex;
+  /* padding: 10px; */
+  margin: 10px;
+  /* vertical-align: middle; */
+}
+
+.savedLyricObjectMain:hover {
+  /* background-color: var(--bg-secondary); */
+}
+
+button:hover {
+  background-color: var(--text-highlight);
+  color: black;
+}
+
+.savedLyricObjectMain p {
+  font-weight: bold;
+  color: var(--text-highlight);
+  font-family: "Work Sans", sans-serif;
+  /* font-family: "Barlow", sans-serif; */
+}
+
+.savedLyricObjectMain img {
+  border-radius: 25px;
+}
+.savedLyrics {
+  overflow: auto;
+}
+
+.savedLyricContent {
+  display: flex;
+  padding-left: 10px;
+  /* vertical-align: middle; */
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
+}

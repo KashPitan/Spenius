@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
-import SavedLyricObject from "./SavedLyricObject";
-import Context from "../Context/Context";
+import SavedLyricObjectMain from "./SavedLyricObjectMain";
+import Context from "../../Context/Context";
+import "../../Styles/SavedLyricsStyles.css";
 
 const SavedLyrics = () => {
   const context = useContext(Context);
@@ -8,7 +9,7 @@ const SavedLyrics = () => {
     <>
       <div className="savedLyrics">
         {context.savedLyrics.map((lyricObj) => (
-          <SavedLyricObject key={lyricObj.id} savedLyricObject={lyricObj} />
+          <SavedLyricObjectMain key={lyricObj.id} savedLyricObject={lyricObj} />
         ))}
       </div>
     </>

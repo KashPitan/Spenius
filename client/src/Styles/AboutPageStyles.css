@@ -1,0 +1,68 @@
+.about-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  max-width: 1000px;
+  margin: auto;
+  padding-top: 30px;
+  height: 87.5vh;
+  padding: 20px;
+  color: white;
+  background-color: var(--bg-dark);
+}
+
+.about-container h1,
+h2 {
+  text-decoration: underline;
+}
+
+#AboutContents {
+  /* text-align: center; */
+}
+
+#whyContents {
+  padding-bottom: 20px;
+}
+
+#howToUse {
+  font-family: "Work Sans", sans-serif;
+  padding-left: 10px;
+  padding-bottom: 20px;
+}
+
+#howToUse li {
+  font-family: "Work Sans", sans-serif;
+  font-weight: normal;
+  list-style-type: circle;
+}
+
+#spenius {
+  padding-bottom: 20px;
+}
+
+#feedback {
+  padding-bottom: 20px;
+}
+
+#futurePlans li {
+  font-weight: normal;
+  font-family: "Work Sans", sans-serif;
+}
+
+#futurePlans li {
+  font-family: "Work Sans", sans-serif;
+  font-weight: normal;
+  list-style-type: circle;
+}
+
+#futurePlans {
+  padding-bottom: 20px;
+}
+
+#futurePlans a {
+  text-decoration: underline;
+}
+/* 
+#howToUse ol {
+  font-weight: 400;
+} */
