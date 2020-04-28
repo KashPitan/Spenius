@@ -1,18 +1,18 @@
-import {
-  GET_GENIUS_URL,
-  GET_NOW_PLAYING,
-  GET_LYRICS,
-  SAVE_LYRICS,
-  GET_USER_DATA,
-} from "../Context/Types";
+import { SAVE_LYRICS, NONE_SELECTED_ALERT } from "../Context/Types";
 
 export default (state, action) => {
   switch (action.type) {
-    case GET_USER_DATA:
+    case SAVE_LYRICS:
       return {
         ...state,
-        user: action.payload,
+        savedLyrics: [...state.savedLyrics, action.payload],
       };
+    case NONE_SELECTED_ALERT:
+      return {
+        ...state,
+        noneSelectedAlert: action.payload,
+      };
+
     default:
       return state;
   }

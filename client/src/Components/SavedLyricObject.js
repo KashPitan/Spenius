@@ -6,7 +6,7 @@ const SavedLyricObject = ({
 }) => {
   return (
     <div className="savedLyricObject">
-      <i>"{lyrics}"</i>
+      <em>"{lyrics}"</em>
       <br></br>
       <p>
         Track: "{song}" from "{album}" by {artist}
