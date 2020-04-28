@@ -5,11 +5,13 @@ const SavedLyricObject = ({
   savedLyricObject: { lyrics, album, artist, song },
 }) => {
   return (
-    <div>
-      <h3>Lyric: "{lyrics}"</h3>
+    <div className="savedLyricObject">
+      <em>"{lyrics}"</em>
+      <br></br>
       <p>
-        Track: "{song}" from "{album}" by {artist}
+        {artist} ({song})
       </p>
+      <hr></hr>
     </div>
   );
 };
