@@ -30,7 +30,7 @@ const Navbar = () => {
                 <Link to="/about">About</Link>
               </li>
               <li id="loginButton">
-                <a href="spenius.herokuapp.com/login">Login</a>
+                <a href="http://spenius.herokuapp.com/login">Login</a>
               </li>
             </ul>
           </nav>
