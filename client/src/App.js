@@ -33,6 +33,9 @@ const getHashParams = () => {
   }
   return hashParams;
 };
+
+const params = getHashParams();
+
 var access_token;
 var refresh_token;
 
