@@ -68,14 +68,6 @@ if (localToken === "undefined") {
   access_token = localToken;
 }
 
-// refresh_token =
-//   typeof localRefreshToken === undefined
-//     ? localRefreshToken
-//     : params.refresh_token;
-// access_token =
-//   typeof localToken === undefined ? localToken : params.access_token;
-
-console.log(access_token);
 const App_dev = () => {
   const context = useContext(Context);
   const userContext = useContext(UserContext);
@@ -109,8 +101,6 @@ const App_dev = () => {
     localStorage.setItem("access token", access_token);
     localStorage.setItem("refresh token", refresh_token);
   }, [access_token, refresh_token]);
-
-  const checkTokenTimeLeft = () => {};
 
   //removes characters in brackets from search strings
   //to improve accuracy of search
