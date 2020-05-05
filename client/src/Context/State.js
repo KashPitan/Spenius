@@ -5,16 +5,25 @@ import {
   DELETE_LYRIC_ITEM,
 } from "../Context/Types";
 import Context from "./Context";
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import Reducer from "./Reducer";
 import uuid from "uuid/v1";
 
+const localData = localStorage.getItem("lyrics");
+const preState = localData
+  ? JSON.parse(localData)
+  : {
+      noneSelectedAlert: false,
+      savedLyrics: [],
+    };
+
 const State = (props) => {
-  const initialState = {
-    noneSelectedAlert: false,
-    savedLyrics: [],
-  };
+  const initialState = preState;
   const [state, dispatch] = useReducer(Reducer, initialState);
+
+  useEffect(() => {
+    localStorage.setItem("lyrics", JSON.stringify(state));
+  }, [state]);
 
   const replaceLineBreaks = (string) => {
     console.log("test");
