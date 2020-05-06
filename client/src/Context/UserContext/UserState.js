@@ -75,7 +75,7 @@ const State = (props) => {
         },
       })
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         localStorage.setItem("access token", response.data.access_token);
         dispatch({
           type: REFRESH_ACCESS_TOKEN,

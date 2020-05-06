@@ -49,7 +49,7 @@ if (localRefreshToken === "undefined") {
   refresh_token = params.refresh_token;
   localStorage.setItem("refresh token", refresh_token);
 } else {
-  console.log(localRefreshToken);
+  // console.log(localRefreshToken);
   refresh_token = localRefreshToken;
 }
 
@@ -67,14 +67,14 @@ const App = () => {
   const context = useContext(Context);
   const userContext = useContext(UserContext);
 
-  const params = getHashParams();
-  const token = params.access_token;
+  // const params = getHashParams();
+  // const token = params.access_token;
 
-  if (token) {
-    spotifyApi.setAccessToken(token);
+  if (access_token) {
+    spotifyApi.setAccessToken(access_token);
   }
 
-  const [loggedIn, setLoggedIn] = useState(token ? true : false);
+  const [loggedIn, setLoggedIn] = useState(access_token ? true : false);
   const isSongPlayingBool = useRef(false);
 
   const [lyrics, setLyrics] = useState("");
@@ -94,7 +94,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    console.log("test");
+    // console.log("test");
     spotifyApi.setAccessToken(access_token);
     localStorage.setItem("access token", access_token);
     localStorage.setItem("refresh token", refresh_token);

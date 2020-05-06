@@ -45,20 +45,20 @@ var localRefreshToken = localStorage.getItem("refresh token");
 console.log(localToken);
 
 if (localRefreshToken === "undefined") {
-  console.log("undef");
+  // console.log("undef");
   refresh_token = params.refresh_token;
   localStorage.setItem("refresh token", refresh_token);
 } else if (!localRefreshToken) {
   refresh_token = params.refresh_token;
   localStorage.setItem("refresh token", refresh_token);
 } else {
-  console.log("testy");
+  // console.log("testy");
   console.log(localRefreshToken);
   refresh_token = localRefreshToken;
 }
 
 if (localToken === "undefined") {
-  console.log("undef");
+  // console.log("undef");
   access_token = params.access_token;
   localStorage.setItem("access token", access_token);
 } else if (!localToken) {
