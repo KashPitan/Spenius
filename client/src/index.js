@@ -10,8 +10,8 @@ ReactDOM.render(
   <React.StrictMode>
     <UserState>
       <State>
-        <App />
-        {/* <App_dev /> */}
+        {/* <App /> */}
+        <App_dev />
       </State>
     </UserState>
   </React.StrictMode>,

@@ -81,15 +81,16 @@ const App_dev = () => {
 
   const [lyrics, setLyrics] = useState("");
 
-  const geniusUrlRef = useRef(null);
-
   const nowPlaying2 = useRef({});
   const [nowPlaying, setNowPlaying] = useState({});
 
   useEffect(() => {
     if (loggedIn) {
       setInterval(() => {
-        getNowPlaying();
+        if (!document.hidden) {
+          // console.log("tab active");
+          getNowPlaying();
+        }
       }, 2000);
     }
     //eslint-disable-next-line
@@ -135,20 +136,19 @@ const App_dev = () => {
         },
       })
       .then(function (response) {
-        geniusUrlRef.current = response.data;
-
-        getLyrics();
+        getLyrics(response.data);
       })
       .catch(function (err) {
         console.log(err);
       });
   };
 
-  const getLyrics = () => {
+  const getLyrics = (geniusUrl) => {
+    console.log("getting lyrics from params" + geniusUrl);
     axios
       .get("http://localhost:8888/lyrics/scrape", {
         params: {
-          url: geniusUrlRef.current,
+          url: geniusUrl,
         },
       })
       .then((response) => {

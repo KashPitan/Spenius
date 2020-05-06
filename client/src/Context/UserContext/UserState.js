@@ -82,6 +82,8 @@ const State = (props) => {
           payload: response.data.access_token,
         });
       });
+    // window.location.reload();
+    // return false;
   };
 
   //sets the access token for the state
