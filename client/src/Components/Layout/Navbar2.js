@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
     <>
-      <header>
+      <header id="nav-header">
         <div id="header-items">
           <div id="header-icon">
             <i className="fas fa-headphones"></i>
@@ -16,7 +16,6 @@ const Navbar = () => {
             <p>Song lyrics using spotify and genius</p>
           </div>
         </div>
-
         <div className="navbarItemsDiv">
           <nav className="navbar2">
             <ul className="nav_links">

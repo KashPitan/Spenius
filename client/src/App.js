@@ -16,6 +16,8 @@ import SavedLyrics from "./Components/SavedLyrics";
 import SavedLyricsMain from "./Components/SavedLyricsPage/SavedLyricsMain";
 import About from "./Pages/About";
 import Context from "./Context/Context";
+import UserContext from "./Context/UserContext/UserContext";
+import Navbar from "./Components/Layout/Navbar";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -32,24 +34,52 @@ const getHashParams = () => {
   return hashParams;
 };
 
+const params = getHashParams();
+
+var access_token;
+var refresh_token;
+
+var localToken = localStorage.getItem("access token");
+var localRefreshToken = localStorage.getItem("refresh token");
+
+if (localRefreshToken === "undefined") {
+  refresh_token = params.refresh_token;
+  localStorage.setItem("refresh token", refresh_token);
+} else if (!localRefreshToken) {
+  refresh_token = params.refresh_token;
+  localStorage.setItem("refresh token", refresh_token);
+} else {
+  // console.log(localRefreshToken);
+  refresh_token = localRefreshToken;
+}
+
+if (localToken === "undefined") {
+  access_token = params.access_token;
+  localStorage.setItem("access token", access_token);
+} else if (!localToken) {
+  access_token = params.access_token;
+  localStorage.setItem("access token", access_token);
+} else {
+  access_token = localToken;
+}
+
 const App = () => {
   const context = useContext(Context);
+  const userContext = useContext(UserContext);
 
-  const params = getHashParams();
-  const token = params.access_token;
+  // const params = getHashParams();
+  // const token = params.access_token;
 
-  if (token) {
-    spotifyApi.setAccessToken(token);
+  if (access_token) {
+    spotifyApi.setAccessToken(access_token);
   }
 
-  const [loggedIn, setLoggedIn] = useState(token ? true : false);
-  // const [isSongPlaying, setIsSongPlaying] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(access_token ? true : false);
   const isSongPlayingBool = useRef(false);
 
   const [lyrics, setLyrics] = useState("");
 
   const geniusUrlRef = useRef(null);
-  // const [geniusUrl, setGeniusUrl] = useState(null);
 
   const nowPlaying2 = useRef({});
   const [nowPlaying, setNowPlaying] = useState({});
@@ -62,6 +92,13 @@ const App = () => {
     }
     //eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    // console.log("test");
+    spotifyApi.setAccessToken(access_token);
+    localStorage.setItem("access token", access_token);
+    localStorage.setItem("refresh token", refresh_token);
+  }, [access_token, refresh_token]);
 
   //removes characters in brackets from search strings
   //to improve accuracy of search
@@ -151,7 +188,8 @@ const App = () => {
   return (
     <Router>
       <>
-        <Navbar2 />
+        {/* <Navbar2 /> */}
+        <Navbar />
         <hr></hr>
         <Switch>
           <Route
@@ -165,12 +203,15 @@ const App = () => {
                       nowPlaying={nowPlaying}
                       isPlaying={isSongPlayingBool.current}
                     />
-                    <h1>Saved Lyrics</h1>
-                    <hr></hr>
-                    <div className="savedLyrics2">
-                      <SavedLyrics />
+                    <div id="savedLyricsDiv">
+                      <h1>Saved Lyrics</h1>
+                      <hr></hr>
+                      <div className="savedLyrics2">
+                        <SavedLyrics />
+                      </div>
                     </div>
                     <button
+                      id="saveLyricsButton"
                       onClick={() => context.saveLyrics(nowPlaying2.current)}
                     >
                       Save Lyrics
