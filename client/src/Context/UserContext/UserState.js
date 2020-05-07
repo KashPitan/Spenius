@@ -81,6 +81,7 @@ const State = (props) => {
           type: REFRESH_ACCESS_TOKEN,
           payload: response.data.access_token,
         });
+        window.location.reload();
       });
     // window.location.reload();
     // return false;

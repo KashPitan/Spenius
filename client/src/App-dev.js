@@ -144,7 +144,7 @@ const App_dev = () => {
   };
 
   const getLyrics = (geniusUrl) => {
-    console.log("getting lyrics from params" + geniusUrl);
+    // console.log("getting lyrics from params" + geniusUrl);
     axios
       .get("http://localhost:8888/lyrics/scrape", {
         params: {
