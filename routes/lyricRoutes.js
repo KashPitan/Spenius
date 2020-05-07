@@ -10,14 +10,15 @@ const Cheerio = require("cheerio");
 
 Router.get("/scrape", function (req, res, next) {
   const url = req.query.url;
-  console.log("request received");
-  console.log(url);
+  // console.log("request received");
+  console.log("requesting from " + url);
   Request_promise(url)
     .then(function (html) {
       //if successful
       const $ = Cheerio.load(html);
       const lyrics = $(".lyrics").text();
       // console.log(lyrics);
+
       res.send(lyrics);
     })
     .catch(function (err) {
@@ -25,6 +26,8 @@ Router.get("/scrape", function (req, res, next) {
       // console.log("lyrics not found");
     });
 });
+
+const scrape = () => {};
 
 Router.get("/genius/search", function (req, res, next) {
   console.log("genius search");

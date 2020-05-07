@@ -39,7 +39,8 @@ const Navbar = () => {
               <i className="fab fa-spotify"></i> Refresh Connection
             </a>
           ) : (
-            <a href="http://spenius.herokuapp.com/login">
+            // <a href="http://spenius.herokuapp.com/login">
+            <a href="http://localhost:8888/login">
               {" "}
               <i className="fab fa-spotify"></i> Connect with Spotify
             </a>

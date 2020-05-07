@@ -13,6 +13,11 @@ const SavedLyricObjectMain = ({
       <div className="savedLyricObjectMain">
         <div className="savedLyricObjectMainImage">
           <img src={albumArt} style={{ height: 100 }} />
+          <div>
+            <button onClick={() => context.deleteLyricObject(id)}>
+              Delete
+            </button>
+          </div>
         </div>
         <div className="savedLyricContent">
           <div>
@@ -22,11 +27,6 @@ const SavedLyricObjectMain = ({
               {artist} ({song})
             </p>
             <p>Album: "{album}"</p>
-          </div>
-          <div>
-            <button onClick={() => context.deleteLyricObject(id)}>
-              Delete
-            </button>
           </div>
         </div>
       </div>

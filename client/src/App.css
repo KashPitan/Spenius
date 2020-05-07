@@ -59,7 +59,7 @@ body {
   max-width: 1200px;
   margin: auto;
   padding-top: 30px;
-  height: 87.5vh;
+  height: 100%;
   padding: 20px;
   color: white;
   background-color: var(--bg-dark);
