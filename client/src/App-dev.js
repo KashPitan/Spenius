@@ -18,6 +18,7 @@ import About from "./Pages/About";
 import Context from "./Context/Context";
 import UserContext from "./Context/UserContext/UserContext";
 import Navbar from "./Components/Layout/Navbar";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const spotifyApi = new SpotifyWebApi();
 
