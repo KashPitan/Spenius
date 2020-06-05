@@ -247,3 +247,21 @@ hr {
     height: 55vh;
   }
 }
+#geniusLinkButton {
+  margin: 1px;
+  flex-shrink: 2;
+  display: inline-block;
+  text-align: center;
+  background: var(--bg-dark);
+  padding: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 0.9rem;
+  border-radius: 25px;
+  text-decoration: underline;
+}
+
+#geniusLinkButton:hover {
+  color: black;
+  background-color: var(--text-highlight2);
+}

@@ -12,12 +12,21 @@ Router.get("/scrape", function (req, res, next) {
   const url = req.query.url;
   // console.log("request received");
   console.log("requesting from " + url);
+  var lyrics = "";
   Request_promise(url)
     .then(function (html) {
-      //if successful
+      console.log("scraping");
       const $ = Cheerio.load(html);
-      const lyrics = $(".lyrics").text();
-      // console.log(lyrics);
+      lyrics = $(".lyrics").text();
+
+      /*the div changing the lyrics doesnt have a consistent id
+      when it doesnt have class="lyrics" it has Lyrics in a css class applied to it
+      formatting needs to be applied to the text when retrieved in this way to preserve line breaks*/
+      if (lyrics === "") {
+        console.log("searching alternate div");
+        $('div[class*="Lyrics__Container"]').find("br").replaceWith("\n");
+        lyrics = $('div[class*="Lyrics__Container"]').text();
+      }
 
       res.send(lyrics);
     })
