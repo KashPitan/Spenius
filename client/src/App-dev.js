@@ -47,8 +47,6 @@ if (localRefreshToken === "undefined") {
   refresh_token = params.refresh_token;
   localStorage.setItem("refresh token", refresh_token);
 } else {
-  // console.log("testy");
-  // console.log(localRefreshToken);
   refresh_token = localRefreshToken;
 }
 
@@ -79,7 +77,7 @@ const App_dev = () => {
     if (loggedIn) {
       setInterval(() => {
         if (!document.hidden) {
-          console.log("tab active");
+          // console.log("tab active");
           getNowPlaying();
         }
       }, 2000);
@@ -112,7 +110,7 @@ const App_dev = () => {
         headers: { Authorization: "Bearer " + access_token },
       })
       .then((response) => {
-        console.log(response.data.item.name);
+        // console.log(response.data.item.name);
         song = {
           name: response.data.item.name,
           albumArt: response.data.item.album.images[0].url,
