@@ -138,7 +138,7 @@ const App = () => {
     const searchTerms = name + " " + artist;
 
     axios
-      .get("http://localhost:8888/lyrics/genius/search", {
+      .get("http://spenius.herokuapp.com/lyrics/genius/search", {
         params: {
           searchTerm: searchTerms,
         },
@@ -155,7 +155,7 @@ const App = () => {
   const getLyrics = (geniusUrl) => {
     // console.log("getting lyrics from params" + geniusUrl);
     axios
-      .get("http://localhost:8888/lyrics/scrape", {
+      .get("http://spenius.herokuapp.com/lyrics/scrape", {
         params: {
           url: geniusUrl,
         },
