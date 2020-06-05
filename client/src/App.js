@@ -7,19 +7,14 @@ import React, {
 } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
-import SpotifyWebApi from "spotify-web-api-js";
 import axios from "axios";
 import Lyrics from "./Components/Lyrics";
-import Navbar2 from "./Components/Layout/Navbar2";
 import NowPlaying from "./Components/NowPlaying";
 import SavedLyrics from "./Components/SavedLyrics";
 import SavedLyricsMain from "./Components/SavedLyricsPage/SavedLyricsMain";
 import About from "./Pages/About";
 import Context from "./Context/Context";
-import UserContext from "./Context/UserContext/UserContext";
 import Navbar from "./Components/Layout/Navbar";
-
-const spotifyApi = new SpotifyWebApi();
 
 const getHashParams = () => {
   var hashParams = {};
@@ -65,21 +60,12 @@ if (localToken === "undefined") {
 
 const App = () => {
   const context = useContext(Context);
-  const userContext = useContext(UserContext);
-
-  // const params = getHashParams();
-  // const token = params.access_token;
-
-  if (access_token) {
-    spotifyApi.setAccessToken(access_token);
-  }
 
   const [loggedIn, setLoggedIn] = useState(access_token ? true : false);
   const isSongPlayingBool = useRef(false);
 
   const [lyrics, setLyrics] = useState("");
-
-  const geniusUrlRef = useRef(null);
+  const [geniusUrl, setGeniusUrl] = useState("");
 
   const nowPlaying2 = useRef({});
   const [nowPlaying, setNowPlaying] = useState({});
@@ -87,7 +73,10 @@ const App = () => {
   useEffect(() => {
     if (loggedIn) {
       setInterval(() => {
-        getNowPlaying();
+        if (!document.hidden) {
+          // console.log("tab active");
+          getNowPlaying();
+        }
       }, 2000);
     }
     //eslint-disable-next-line
@@ -95,7 +84,6 @@ const App = () => {
 
   useEffect(() => {
     // console.log("test");
-    spotifyApi.setAccessToken(access_token);
     localStorage.setItem("access token", access_token);
     localStorage.setItem("refresh token", refresh_token);
   }, [access_token, refresh_token]);
@@ -112,41 +100,64 @@ const App = () => {
     return s;
   };
 
+  const getNowPlaying = () => {
+    let song = {};
+    axios
+      .get("https://api.spotify.com/v1/me/player/currently-playing", {
+        headers: { Authorization: "Bearer " + access_token },
+      })
+      .then((response) => {
+        // console.log(response.data.item.name);
+        song = {
+          name: response.data.item.name,
+          albumArt: response.data.item.album.images[0].url,
+          artist: response.data.item.artists[0].name,
+          album: response.data.item.album.name,
+        };
+
+        //checks whether the song returned by the api call is the same as the currnent song
+        //if not it updates the components with the new song
+        if (JSON.stringify(nowPlaying2.current) !== JSON.stringify(song)) {
+          // console.log("isnew");
+          setNowPlaying(song);
+          nowPlaying2.current = song;
+          getGeniusUrl();
+        }
+        isSongPlayingBool.current = true;
+        // console.log(isSongPlaying);
+      })
+      .catch((err) => {
+        isSongPlayingBool.current = false;
+      });
+  };
+
   const getGeniusUrl = () => {
     var name = refineSearchTerms(nowPlaying2.current.name);
     var artist = nowPlaying2.current.artist;
 
-    // console.log(name, artist);
-    // console.log(nowPlaying2.current.name, nowPlaying2.current.artist);
-
     const searchTerms = name + " " + artist;
-    const searchTerms2 =
-      nowPlaying2.current.name + " " + nowPlaying2.current.artist;
-
-    // console.log(searchTerms);
-    // console.log(searchTerms2);
 
     axios
-      .get("http://spenius.herokuapp.com/lyrics/genius/search", {
+      .get("http://localhost:8888/lyrics/genius/search", {
         params: {
           searchTerm: searchTerms,
         },
       })
       .then(function (response) {
-        geniusUrlRef.current = response.data;
-
-        getLyrics();
+        setGeniusUrl(response.data);
+        getLyrics(response.data);
       })
       .catch(function (err) {
         console.log(err);
       });
   };
 
-  const getLyrics = () => {
+  const getLyrics = (geniusUrl) => {
+    // console.log("getting lyrics from params" + geniusUrl);
     axios
-      .get("http://spenius.herokuapp.com/lyrics/scrape", {
+      .get("http://localhost:8888/lyrics/scrape", {
         params: {
-          url: geniusUrlRef.current,
+          url: geniusUrl,
         },
       })
       .then((response) => {
@@ -155,33 +166,6 @@ const App = () => {
       })
       .catch(function (err) {
         // console.log(err);
-      });
-  };
-
-  const getNowPlaying = () => {
-    var song = {};
-    spotifyApi
-      .getMyCurrentPlaybackState()
-      .then((response) => {
-        song = {
-          name: response.item.name,
-          albumArt: response.item.album.images[0].url,
-          artist: response.item.artists[0].name,
-          album: response.item.album.name,
-        };
-
-        //checks whether the song returned by the api call is the same as the currnent song
-        //if not it updates the components with the new song
-        if (JSON.stringify(nowPlaying2.current) !== JSON.stringify(song)) {
-          setNowPlaying(song);
-          nowPlaying2.current = song;
-          getGeniusUrl();
-        }
-        isSongPlayingBool.current = true;
-        // console.log(isSongPlaying);
-      })
-      .catch(() => {
-        isSongPlayingBool.current = false;
       });
   };
 
@@ -200,6 +184,7 @@ const App = () => {
                 <div className="container">
                   <div className="nowPlaying-savedLyrics">
                     <NowPlaying
+                      geniusUrl={geniusUrl}
                       nowPlaying={nowPlaying}
                       isPlaying={isSongPlayingBool.current}
                     />

@@ -1,6 +1,6 @@
 import React from "react";
 
-const NowPlaying = ({ nowPlaying, isPlaying }) => {
+const NowPlaying = ({ nowPlaying, isPlaying, geniusUrl }) => {
   return (
     <>
       {isPlaying ? (
@@ -16,6 +16,11 @@ const NowPlaying = ({ nowPlaying, isPlaying }) => {
               </p>
               <p id="currentArtist">By: {nowPlaying.artist}</p>
               <p id="currentAlbum">Album: {nowPlaying.album}</p>
+              <button id="geniusLinkButton">
+                <a href={geniusUrl} target="_blank">
+                  See Lyrics on Genius
+                </a>
+              </button>
             </div>
           </div>
         </div>

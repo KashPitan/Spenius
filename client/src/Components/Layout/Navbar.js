@@ -1,12 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import SpotifyWebApi from "spotify-web-api-js";
 // import "../../App.css";
 import "../../navbar.css";
 import { Link } from "react-router-dom";
 import UserContext from "../../Context/UserContext/UserContext";
 
 const Navbar = () => {
-  const spotifyApi = new SpotifyWebApi();
   const userContext = new useContext(UserContext);
   // console.log(userContext.access_token);
   var access_token = localStorage.getItem("access token");
@@ -39,9 +37,8 @@ const Navbar = () => {
               <i className="fab fa-spotify"></i> Refresh Connection
             </a>
           ) : (
-            // <a href="http://spenius.herokuapp.com/login">
-            <a href="http://localhost:8888/login">
-              {" "}
+            <a href="http://spenius.herokuapp.com/login">
+              {/* <a href="http://localhost:8888/login"> */}{" "}
               <i className="fab fa-spotify"></i> Connect with Spotify
             </a>
           )}

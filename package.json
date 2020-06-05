@@ -4,6 +4,7 @@
   "description": "Basic examples of the Spotify authorization flows through OAuth 2",
   "version": "0.0.2",
   "dependencies": {
+    "@material-ui/core": "^4.9.13",
     "cheerio": "^1.0.0-rc.3",
     "concurrently": "^5.1.0",
     "cookie-parser": "^1.4.5",
