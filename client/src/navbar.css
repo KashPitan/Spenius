@@ -58,6 +58,7 @@ h6 {
 }
 
 #connect-button {
+  /* color: white; */
   margin: 10px;
   flex-shrink: 2;
   display: inline-block;
@@ -71,7 +72,14 @@ h6 {
   border-radius: 25px;
 }
 
+#connect-button a {
+  color: white;
+  font-weight: bold;
+  font-family: "Barlow", sans-serif;
+}
+
 #connect-button i {
+  color: white;
   font-size: 24px;
   padding-right: 10px;
 }

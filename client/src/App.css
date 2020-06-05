@@ -260,6 +260,10 @@ hr {
   border-radius: 25px;
   text-decoration: underline;
 }
+#geniusLinkButton a {
+  color: white;
+  font-family: "Barlow", sans-serif;
+}
 
 #geniusLinkButton:hover {
   color: black;
