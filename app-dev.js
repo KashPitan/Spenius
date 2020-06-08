@@ -151,7 +151,12 @@ app.get("/callback", function (req, res) {
           console.log(body);
         });
 
+        res
+          .cookie("access_token", access_token)
+          .cookie("refresh_token", refresh_token)
+          .redirect("http://localhost:5000/");
         // we can also pass the token to the browser to make requests from there
+
         res.redirect(
           "http://localhost:5000/#" +
             querystring.stringify({

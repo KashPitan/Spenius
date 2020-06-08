@@ -33,38 +33,40 @@ const params = getHashParams();
 
 var access_token;
 var refresh_token;
+var tokens;
 
 var localToken = localStorage.getItem("access token");
 var localRefreshToken = localStorage.getItem("refresh token");
 
 // console.log(localToken);
 
-if (localRefreshToken === "undefined") {
-  // console.log("undef");
-  refresh_token = params.refresh_token;
-  localStorage.setItem("refresh token", refresh_token);
-} else if (!localRefreshToken) {
-  refresh_token = params.refresh_token;
-  localStorage.setItem("refresh token", refresh_token);
-} else {
-  refresh_token = localRefreshToken;
-}
+// if (localRefreshToken === "undefined") {
+//   // console.log("undef");
+//   refresh_token = params.refresh_token;
+//   localStorage.setItem("refresh token", refresh_token);
+// } else if (!localRefreshToken) {
+//   refresh_token = params.refresh_token;
+//   localStorage.setItem("refresh token", refresh_token);
+// } else {
+//   refresh_token = localRefreshToken;
+// }
 
-if (localToken === "undefined") {
-  // console.log("undef");
-  access_token = params.access_token;
-  localStorage.setItem("access token", access_token);
-} else if (!localToken) {
-  access_token = params.access_token;
-  localStorage.setItem("access token", access_token);
-} else {
-  access_token = localToken;
-}
+// if (localToken === "undefined") {
+//   // console.log("undef");
+//   access_token = params.access_token;
+//   localStorage.setItem("access token", access_token);
+// } else if (!localToken) {
+//   access_token = params.access_token;
+//   localStorage.setItem("access token", access_token);
+// } else {
+//   access_token = localToken;
+// }
 
 const App_dev = () => {
   const context = useContext(Context);
 
-  const [loggedIn, setLoggedIn] = useState(access_token ? true : false);
+  // const [loggedIn, setLoggedIn] = useState(access_token ? true : false);
+  const loggedIn = useRef(access_token ? true : false);
   const isSongPlayingBool = useRef(false);
 
   const [lyrics, setLyrics] = useState("");
@@ -73,7 +75,17 @@ const App_dev = () => {
   const nowPlaying2 = useRef({});
   const [nowPlaying, setNowPlaying] = useState({});
 
+  //get the cookies and read the data into the token variables
+  const readCookie = () => {
+    if (!document.cookie) return;
+    tokens = document.cookie.split(";");
+    access_token = tokens[0].split("=")[1];
+    refresh_token = tokens[1].split("=")[1];
+    loggedIn.current = true;
+  };
+
   useEffect(() => {
+    readCookie();
     if (loggedIn) {
       setInterval(() => {
         if (!document.hidden) {
@@ -85,11 +97,11 @@ const App_dev = () => {
     //eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    console.log("test");
-    localStorage.setItem("access token", access_token);
-    localStorage.setItem("refresh token", refresh_token);
-  }, [access_token, refresh_token]);
+  // useEffect(() => {
+  //   console.log("test");
+  //   localStorage.setItem("access token", access_token);
+  //   localStorage.setItem("refresh token", refresh_token);
+  // }, [access_token, refresh_token]);
 
   //removes characters in brackets from search strings
   //to improve accuracy of search
@@ -105,6 +117,8 @@ const App_dev = () => {
 
   const getNowPlaying = () => {
     let song = {};
+    console.log("nowplaying");
+    console.log(access_token);
     axios
       .get("https://api.spotify.com/v1/me/player/currently-playing", {
         headers: { Authorization: "Bearer " + access_token },
