@@ -16,56 +16,13 @@ import About from "./Pages/About";
 import Context from "./Context/Context";
 import Navbar from "./Components/Layout/Navbar";
 
-const getHashParams = () => {
-  var hashParams = {};
-  var e,
-    r = /([^&;=]+)=?([^&;]*)/g,
-    q = window.location.hash.substring(1);
-  e = r.exec(q);
-  while (e) {
-    hashParams[e[1]] = decodeURIComponent(e[2]);
-    e = r.exec(q);
-  }
-  return hashParams;
-};
-
-const params = getHashParams();
-
 var access_token;
 var refresh_token;
 var tokens;
 
-var localToken = localStorage.getItem("access token");
-var localRefreshToken = localStorage.getItem("refresh token");
-
-// console.log(localToken);
-
-// if (localRefreshToken === "undefined") {
-//   // console.log("undef");
-//   refresh_token = params.refresh_token;
-//   localStorage.setItem("refresh token", refresh_token);
-// } else if (!localRefreshToken) {
-//   refresh_token = params.refresh_token;
-//   localStorage.setItem("refresh token", refresh_token);
-// } else {
-//   refresh_token = localRefreshToken;
-// }
-
-// if (localToken === "undefined") {
-//   // console.log("undef");
-//   access_token = params.access_token;
-//   localStorage.setItem("access token", access_token);
-// } else if (!localToken) {
-//   access_token = params.access_token;
-//   localStorage.setItem("access token", access_token);
-// } else {
-//   access_token = localToken;
-// }
-
 const App_dev = () => {
   const context = useContext(Context);
 
-  // const [loggedIn, setLoggedIn] = useState(access_token ? true : false);
   const loggedIn = useRef(access_token ? true : false);
   const isSongPlayingBool = useRef(false);
 
@@ -97,12 +54,6 @@ const App_dev = () => {
     //eslint-disable-next-line
   }, []);
 
-  // useEffect(() => {
-  //   console.log("test");
-  //   localStorage.setItem("access token", access_token);
-  //   localStorage.setItem("refresh token", refresh_token);
-  // }, [access_token, refresh_token]);
-
   //removes characters in brackets from search strings
   //to improve accuracy of search
   const refineSearchTerms = (s) => {
@@ -117,8 +68,6 @@ const App_dev = () => {
 
   const getNowPlaying = () => {
     let song = {};
-    console.log("nowplaying");
-    console.log(access_token);
     axios
       .get("https://api.spotify.com/v1/me/player/currently-playing", {
         headers: { Authorization: "Bearer " + access_token },
