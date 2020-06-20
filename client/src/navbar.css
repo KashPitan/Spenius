@@ -53,6 +53,11 @@ h6 {
   text-align: center;
 }
 
+#mobile-title {
+  display: none;
+  font-size: 2rem;
+}
+
 #headerANDicon {
   display: flex;
 }
@@ -146,7 +151,16 @@ h6 {
 }
 
 @media only screen and (max-width: 620px) {
-  #header-icon {
+  #mobile-title {
+    display: inline-block;
+  }
+  #desktop-title {
+    display: none;
+  }
+  /* #header-icon {
+    display: none;
+  } */
+  #header-text2 {
     display: none;
   }
   #connect-button {

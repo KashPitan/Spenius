@@ -36,8 +36,6 @@ Router.get("/scrape", function (req, res, next) {
     });
 });
 
-const scrape = () => {};
-
 Router.get("/genius/search", function (req, res, next) {
   console.log("genius search");
   // console.log(req.query.searchTerm);

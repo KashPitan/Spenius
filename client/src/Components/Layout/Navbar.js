@@ -1,22 +1,26 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 // import "../../App.css";
 import "../../navbar.css";
 import { Link } from "react-router-dom";
 import UserContext from "../../Context/UserContext/UserContext";
 
+var access_token;
+
 const Navbar = () => {
   const userContext = new useContext(UserContext);
-  // console.log(userContext.access_token);
-  var access_token = localStorage.getItem("access token");
-  var refreshBool;
+  const refreshBool = useRef(access_token ? true : false);
 
-  if (access_token === "undefined") {
-    refreshBool = false;
-  } else if (!access_token) {
-    refreshBool = false;
-  } else {
-    refreshBool = true;
-  }
+  const getCookieByName = (name) => {
+    let match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+    if (match) return match[2];
+  };
+
+  useEffect(() => {
+    access_token = getCookieByName("access_token");
+    if (access_token) {
+      refreshBool.current = true;
+    }
+  }, []);
 
   return (
     <>
@@ -26,12 +30,17 @@ const Navbar = () => {
             <i className="fas fa-headphones"></i>
           </div>
           <div id="title">
-            <h1>Sponius? Genify? SPENIUS???</h1>
+            <div id="desktop-title">
+              <h1>Sponius? Genify? SPENIUS???</h1>
+            </div>
+            <div id="mobile-title">
+              <h1>SPENIUS</h1>
+            </div>
           </div>
         </div>
 
         <div id="connect-button">
-          {refreshBool ? (
+          {refreshBool.current ? (
             <a href="" onClick={userContext.refreshToken}>
               {" "}
               <i className="fab fa-spotify"></i> Refresh Connection
@@ -43,10 +52,6 @@ const Navbar = () => {
               <i className="fab fa-spotify"></i> Connect with Spotify
             </a>
           )}
-          {/* <a href="" onClick={userContext.logIn}>
-            {" "}
-            <i className="fab fa-spotify"></i> Connect with Spotify
-          </a> */}
         </div>
       </div>
       <div id="header-text2">

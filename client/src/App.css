@@ -241,12 +241,14 @@ hr {
   .nowPlaying-savedLyrics {
     align-self: center;
   }
+
   #saveLyricsButton {
   }
   #lyrics-text {
     height: 55vh;
   }
 }
+
 #geniusLinkButton {
   margin: 1px;
   flex-shrink: 2;
@@ -258,7 +260,6 @@ hr {
   padding-right: 5px;
   font-size: 0.9rem;
   border-radius: 25px;
-  text-decoration: underline;
 }
 #geniusLinkButton a {
   color: white;

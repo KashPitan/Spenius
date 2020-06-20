@@ -17,8 +17,6 @@ import Context from "./Context/Context";
 import Navbar from "./Components/Layout/Navbar";
 
 var access_token;
-var refresh_token;
-var tokens;
 
 const App_dev = () => {
   const context = useContext(Context);
@@ -32,18 +30,21 @@ const App_dev = () => {
   const nowPlaying2 = useRef({});
   const [nowPlaying, setNowPlaying] = useState({});
 
-  //get the cookies and read the data into the token variables
-  const readCookie = () => {
+  const isInstrumental = useRef(false);
+
+  //get the access_token from the cookie
+  const getAccessTokenFromCookie = () => {
     if (!document.cookie) return;
-    tokens = document.cookie.split(";");
-    access_token = tokens[0].split("=")[1];
-    refresh_token = tokens[1].split("=")[1];
+    let match = document.cookie.match(
+      new RegExp("(^| )" + "access_token" + "=([^;]+)")
+    );
+    if (match) access_token = match[2];
     loggedIn.current = true;
   };
 
   useEffect(() => {
-    readCookie();
-    if (loggedIn) {
+    getAccessTokenFromCookie();
+    if (loggedIn.current) {
       setInterval(() => {
         if (!document.hidden) {
           // console.log("tab active");
@@ -66,73 +67,111 @@ const App_dev = () => {
     return s;
   };
 
-  const getNowPlaying = () => {
-    let song = {};
-    axios
-      .get("https://api.spotify.com/v1/me/player/currently-playing", {
-        headers: { Authorization: "Bearer " + access_token },
-      })
-      .then((response) => {
-        // console.log(response.data.item.name);
-        song = {
-          name: response.data.item.name,
-          albumArt: response.data.item.album.images[0].url,
-          artist: response.data.item.artists[0].name,
-          album: response.data.item.album.name,
-        };
-
-        //checks whether the song returned by the api call is the same as the currnent song
-        //if not it updates the components with the new song
-        if (JSON.stringify(nowPlaying2.current) !== JSON.stringify(song)) {
-          // console.log("isnew");
-          setNowPlaying(song);
-          nowPlaying2.current = song;
-          getGeniusUrl();
-        }
-        isSongPlayingBool.current = true;
-        // console.log(isSongPlaying);
-      })
-      .catch((err) => {
-        isSongPlayingBool.current = false;
-      });
+  /*compares the currently playing song to the one returned
+  from the api call. Returns true if the song is already
+  playing*/
+  const checkSongIsAlreadyPlaying = (song, apiSong) => {
+    if (song !== apiSong) return false;
+    return true;
   };
 
-  const getGeniusUrl = () => {
-    var name = refineSearchTerms(nowPlaying2.current.name);
-    var artist = nowPlaying2.current.artist;
+  const isSongInstrumental = async (songId) => {
+    const res = await axios.get(
+      "https://api.spotify.com/v1/audio-features/" + songId,
+      {
+        headers: { Authorization: "Bearer " + access_token },
+      }
+    );
+    if (res.data.instrumentalness > 0.5) return true;
+    return false;
+  };
+
+  //spotify api call to get the currently playing song
+  const getNowPlaying = async () => {
+    if (document.hidden) return;
+    let song = {};
+    let songId = 0;
+    var res;
+    try {
+      res = await axios.get(
+        "https://api.spotify.com/v1/me/player/currently-playing",
+        {
+          headers: { Authorization: "Bearer " + access_token },
+        }
+      );
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+
+    //if there is no response from the api call
+    if (res && res.status !== 200) {
+      isSongPlayingBool.current = false;
+      return;
+    }
+    //get the song id to pass to api call later and check if song is instrumental
+    songId = res.data.item.id;
+    song = {
+      name: res.data.item.name,
+      albumArt: res.data.item.album.images[0].url,
+      artist: res.data.item.artists[0].name,
+      album: res.data.item.album.name,
+    };
+
+    let songNowPlaying = JSON.stringify(nowPlaying2.current);
+    let apiSong = JSON.stringify(song);
+
+    //checks whether the song returned by the api call is the same as the currnent song
+    //if not it updates the components with the new song
+    if (!checkSongIsAlreadyPlaying(songNowPlaying, apiSong)) {
+      setNowPlaying(song);
+      nowPlaying2.current = song;
+
+      if (await isSongInstrumental(songId)) {
+        setLyrics("[ Instrumental ]");
+      } else {
+        // console.log("test");
+        getGeniusUrl();
+      }
+      //updates boolean to show that a song is currently playing
+      isSongPlayingBool.current = true;
+    }
+  };
+
+  const getGeniusUrl = async () => {
+    let name = refineSearchTerms(nowPlaying2.current.name);
+    let artist = nowPlaying2.current.artist;
 
     const searchTerms = name + " " + artist;
 
-    axios
-      .get("http://localhost:8888/lyrics/genius/search", {
-        params: {
-          searchTerm: searchTerms,
-        },
-      })
-      .then(function (response) {
-        setGeniusUrl(response.data);
-        getLyrics(response.data);
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
+    try {
+      let response = await axios.get(
+        "http://localhost:8888/lyrics/genius/search",
+        {
+          params: {
+            searchTerm: searchTerms,
+          },
+        }
+      );
+
+      setGeniusUrl(response.data);
+      getLyrics(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const getLyrics = (geniusUrl) => {
-    // console.log("getting lyrics from params" + geniusUrl);
-    axios
-      .get("http://localhost:8888/lyrics/scrape", {
+  const getLyrics = async (geniusUrl) => {
+    try {
+      let response = await axios.get("http://localhost:8888/lyrics/scrape", {
         params: {
           url: geniusUrl,
         },
-      })
-      .then((response) => {
-        setLyrics(response.data);
-        // console.log(response.data);
-      })
-      .catch(function (err) {
-        // console.log(err);
       });
+      setLyrics(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

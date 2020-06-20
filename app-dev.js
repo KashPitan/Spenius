@@ -196,7 +196,8 @@ app.get("/refresh_token", function (req, res) {
   request.post(authOptions, function (error, response, body) {
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token;
-      res.send({
+
+      res.cookie("access_token", access_token).send({
         access_token: access_token,
       });
     }
