@@ -25,23 +25,6 @@ const State = (props) => {
     localStorage.setItem("lyrics", JSON.stringify(state));
   }, [state]);
 
-  const replaceLineBreaks = (string) => {
-    console.log("test");
-    string = string.replace(/\n/g, " ");
-    return string;
-  };
-
-  const selectText2 = () => {
-    if (window.getSelection) {
-      var range = window.getSelection().getRangeAt(0);
-      var selectionContents = range.cloneContents();
-      return selectionContents;
-    } else if (document.selection && document.selection.type !== "Control") {
-      var contents = document.selection.createRange().cloneContents();
-      return contents;
-    }
-  };
-
   const selectText = () => {
     //sets variable to store text user highlights on page
     var selected = "";

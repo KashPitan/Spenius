@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const NowPlaying = ({ nowPlaying, isPlaying, geniusUrl }) => {
+  // const getSong
+  useEffect(() => {
+    // nowPlayingUpdateLoop();
+  }, []);
   return (
     <>
       {isPlaying ? (
         <div className="nowPlaying">
           <div id="nowPlayingSongInfo">
             <div className="nowPlayingImage">
-              <img src={nowPlaying.albumArt} style={{ height: 150 }} />
+              <img src={nowPlaying.albumArt} />
             </div>
 
             <div className="nowPlayingText">

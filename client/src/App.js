@@ -11,10 +11,12 @@ import axios from "axios";
 import Lyrics from "./Components/Lyrics";
 import NowPlaying from "./Components/NowPlaying";
 import SavedLyrics from "./Components/SavedLyrics";
-import SavedLyricsMain from "./Components/SavedLyricsPage/SavedLyricsMain";
+import SavedLyricsMain from "./Pages/SavedLyricsPage/SavedLyricsMain";
 import About from "./Pages/About";
 import Context from "./Context/Context";
 import Navbar from "./Components/Layout/Navbar";
+import { Provider } from "react-redux";
+import store from "./store";
 
 const getHashParams = () => {
   var hashParams = {};
@@ -170,69 +172,71 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <>
-        {/* <Navbar2 /> */}
-        <Navbar />
-        <hr></hr>
-        <Switch>
-          <Route
-            exact
-            path="/"
-            render={(props) => (
-              <Fragment>
-                <div className="container">
-                  <div className="nowPlaying-savedLyrics">
-                    <NowPlaying
-                      geniusUrl={geniusUrl}
-                      nowPlaying={nowPlaying}
-                      isPlaying={isSongPlayingBool.current}
-                    />
-                    <div id="savedLyricsDiv">
+    <Provider store={store}>
+      <Router>
+        <>
+          {/* <Navbar2 /> */}
+          <Navbar />
+          <hr></hr>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={(props) => (
+                <Fragment>
+                  <div className="container">
+                    <div className="nowPlaying-savedLyrics">
+                      <NowPlaying
+                        geniusUrl={geniusUrl}
+                        nowPlaying={nowPlaying}
+                        isPlaying={isSongPlayingBool.current}
+                      />
+                      <div id="savedLyricsDiv">
+                        <h1>Saved Lyrics</h1>
+                        <hr></hr>
+                        <div className="savedLyrics2">
+                          <SavedLyrics />
+                        </div>
+                      </div>
+                      <button
+                        id="saveLyricsButton"
+                        onClick={() => context.saveLyrics(nowPlaying2.current)}
+                      >
+                        Save Lyrics
+                      </button>
+                      {context.noneSelectedAlert && (
+                        <p>Text selection cannot be empty!</p>
+                      )}
+                    </div>
+
+                    <Lyrics lyrics={lyrics} />
+                  </div>
+                </Fragment>
+              )}
+            ></Route>
+            <Route exact path="/about" component={About} />
+            <Route
+              exact
+              path="/lyrics"
+              render={(props) => (
+                <Fragment>
+                  <div className="container2">
+                    <div id="lyricsPageTitle">
                       <h1>Saved Lyrics</h1>
                       <hr></hr>
-                      <div className="savedLyrics2">
-                        <SavedLyrics />
-                      </div>
                     </div>
-                    <button
-                      id="saveLyricsButton"
-                      onClick={() => context.saveLyrics(nowPlaying2.current)}
-                    >
-                      Save Lyrics
+                    <SavedLyricsMain />
+                    <button onClick={() => context.clearLyrics()}>
+                      Clear Lyrics
                     </button>
-                    {context.noneSelectedAlert && (
-                      <p>Text selection cannot be empty!</p>
-                    )}
                   </div>
-
-                  <Lyrics lyrics={lyrics} />
-                </div>
-              </Fragment>
-            )}
-          ></Route>
-          <Route exact path="/about" component={About} />
-          <Route
-            exact
-            path="/lyrics"
-            render={(props) => (
-              <Fragment>
-                <div className="container2">
-                  <div id="lyricsPageTitle">
-                    <h1>Saved Lyrics</h1>
-                    <hr></hr>
-                  </div>
-                  <SavedLyricsMain />
-                  <button onClick={() => context.clearLyrics()}>
-                    Clear Lyrics
-                  </button>
-                </div>
-              </Fragment>
-            )}
-          />
-        </Switch>
-      </>
-    </Router>
+                </Fragment>
+              )}
+            />
+          </Switch>
+        </>
+      </Router>
+    </Provider>
   );
 };
 

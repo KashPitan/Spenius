@@ -75,6 +75,8 @@ h6 {
   padding-right: 20px;
   font-size: 1.3rem;
   border-radius: 25px;
+  transition-duration: 0.4s;
+  border: 1px solid white;
 }
 
 #connect-button a {
