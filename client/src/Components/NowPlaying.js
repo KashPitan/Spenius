@@ -30,7 +30,10 @@ const NowPlaying = ({ nowPlaying, isPlaying, geniusUrl }) => {
         </div>
       ) : (
         <div className="nowPlaying">
-          <p id="nonePlayingText">Song will display here when playing</p>
+          <p id="nonePlayingText">
+            Song will display here when playing <br /> (You may need to
+            reconnect)
+          </p>
         </div>
       )}
     </>

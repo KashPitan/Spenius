@@ -34,8 +34,6 @@ const App_dev = () => {
   useEffect(() => {
     access_token = getAccessTokenFromCookie();
     if (access_token) loggedIn.current = true;
-
-    console.log(loggedIn.current);
     if (loggedIn.current) {
       setInterval(() => {
         if (!document.hidden) {
@@ -133,7 +131,7 @@ const App_dev = () => {
   };
   return (
     <>
-      {loggedIn ? (
+      {loggedIn.current ? (
         <Router>
           <>
             <Navbar />
