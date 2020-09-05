@@ -1,28 +1,27 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  Fragment,
-  useContext,
-} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
 import axios from "axios";
-import Lyrics from "./Components/Lyrics";
-import NowPlaying from "./Components/NowPlaying";
-import SavedLyrics from "./Components/SavedLyrics";
-import SavedLyricsMain from "./Pages/SavedLyricsPage/SavedLyricsMain";
+
 import About from "./Pages/About";
-import Context from "./Context/Context";
 import Navbar from "./Components/Layout/Navbar";
 import { Provider } from "react-redux";
 import store from "./store";
 
+//Pages
+import SplashScreen from "./Pages/SplashScreen";
+import LyricsPage from "./Pages/LyricsPage";
+import MainPage from "./Pages/MainPage";
+
+//functions
+import getAccessTokenFromCookie from "./Helper-Functions/CookieFunctions";
+import refineSearchTerms from "./Helper-Functions/RefineSearchTerms";
+import checkSongIsAlreadyPlaying from "./Helper-Functions/CheckSongIsAlreadyPlaying";
+import isSongInstrumental from "./Helper-Functions/IsSongInstrumental";
+
 var access_token;
 
 const App_dev = () => {
-  const context = useContext(Context);
-
   const loggedIn = useRef(access_token ? true : false);
   const isSongPlayingBool = useRef(false);
 
@@ -32,18 +31,10 @@ const App_dev = () => {
   const nowPlaying2 = useRef({});
   const [nowPlaying, setNowPlaying] = useState({});
 
-  //get the access_token from the cookie
-  const getAccessTokenFromCookie = () => {
-    if (!document.cookie) return;
-    let match = document.cookie.match(
-      new RegExp("(^| )" + "access_token" + "=([^;]+)")
-    );
-    if (match) access_token = match[2];
-    loggedIn.current = true;
-  };
-
   useEffect(() => {
-    getAccessTokenFromCookie();
+    access_token = getAccessTokenFromCookie();
+    if (access_token) loggedIn.current = true;
+
     console.log(loggedIn.current);
     if (loggedIn.current) {
       setInterval(() => {
@@ -54,54 +45,6 @@ const App_dev = () => {
     }
     //eslint-disable-next-line
   }, []);
-
-  window.onSpotifyWebPlaybackSDKReady = () => {
-    const token = access_token;
-    const player = new Spotify.Player({
-      name: "Spotify Demo Player",
-      getOAuthToken: (cb) => {
-        cb(token);
-      },
-    });
-
-    player.addListener("player_state_changed", (state) => {
-      console.log(state);
-    });
-    player.connect();
-
-    // add event listeners to the player
-  };
-
-  //removes characters in brackets from search strings
-  //to improve accuracy of search
-  const refineSearchTerms = (s) => {
-    if (s.includes("(")) {
-      s = s.substring(0, s.indexOf("("));
-    }
-    if (s.includes("-")) {
-      s = s.substring(0, s.indexOf("-"));
-    }
-    return s;
-  };
-
-  /*compares the currently playing song to the one returned
-  from the api call. Returns true if the song is already
-  playing*/
-  const checkSongIsAlreadyPlaying = (song, apiSong) => {
-    if (song !== apiSong) return false;
-    return true;
-  };
-
-  const isSongInstrumental = async (songId) => {
-    const res = await axios.get(
-      "https://api.spotify.com/v1/audio-features/" + songId,
-      {
-        headers: { Authorization: "Bearer " + access_token },
-      }
-    );
-    if (res.data.instrumentalness > 0.5) return true;
-    return false;
-  };
 
   //spotify api call to get the currently playing song
   const getNowPlaying = async () => {
@@ -186,77 +129,41 @@ const App_dev = () => {
         },
       });
       setLyrics(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
-
   return (
-    <Provider store={store}>
-      <Router>
-        <>
-          <Navbar />
-          <hr></hr>
-          <Switch>
-            <Route
-              exact
-              path="/"
-              render={(props) => (
-                <Fragment>
-                  <div className="container">
-                    <div className="nowPlaying-savedLyrics">
-                      <NowPlaying
-                        geniusUrl={geniusUrl}
-                        nowPlaying={nowPlaying}
-                        isPlaying={isSongPlayingBool.current}
-                      />
-                      <div id="savedLyricsDiv">
-                        <h1>Saved Lyrics</h1>
-                        <hr></hr>
-                        <div className="savedLyrics2">
-                          <SavedLyrics />
-                        </div>
-                      </div>
-                      <button
-                        id="saveLyricsButton"
-                        onClick={() => context.saveLyrics(nowPlaying2.current)}
-                      >
-                        Save Lyrics
-                      </button>
-                      {context.noneSelectedAlert && (
-                        <p>Text selection cannot be empty!</p>
-                      )}
-                    </div>
-
-                    <Lyrics lyrics={lyrics} />
-                  </div>
-                </Fragment>
-              )}
-            ></Route>
-            <Route exact path="/about" component={About} />
-            <Route
-              exact
-              path="/lyrics"
-              render={(props) => (
-                <Fragment>
-                  <div className="container2">
-                    <div id="lyricsPageTitle">
-                      <h1>Saved Lyrics</h1>
-                      <hr></hr>
-                    </div>
-                    <SavedLyricsMain />
-                    <button onClick={() => context.clearLyrics()}>
-                      Clear Lyrics
-                    </button>
-                  </div>
-                </Fragment>
-              )}
-            />
-          </Switch>
-        </>
-      </Router>
-    </Provider>
+    <>
+      {loggedIn ? (
+        <Router>
+          <>
+            <Navbar />
+            <hr></hr>
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={() => (
+                  <MainPage
+                    geniusUrl={geniusUrl}
+                    nowPlaying={nowPlaying}
+                    isSongPlaying={isSongPlayingBool.current}
+                    nowPlaying2={nowPlaying2}
+                    lyrics={lyrics}
+                  />
+                )}
+              ></Route>
+              <Route exact path="/about" component={About} />
+              <Route exact path="/lyrics" component={LyricsPage} />
+            </Switch>
+          </>
+        </Router>
+      ) : (
+        <SplashScreen />
+      )}
+    </>
   );
+  // <Provider store={store}>
+  // </Provider>
 };
 
 export default App_dev;

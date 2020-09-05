@@ -4,16 +4,14 @@ import "../../navbar.css";
 import { Link } from "react-router-dom";
 import UserContext from "../../Context/UserContext/UserContext";
 
+//functions
+import getCookieByName from "../../Helper-Functions/CookieFunctions";
+
 var access_token;
 
 const Navbar = () => {
   const userContext = new useContext(UserContext);
   const refreshBool = useRef(access_token ? true : false);
-
-  const getCookieByName = (name) => {
-    let match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-    if (match) return match[2];
-  };
 
   useEffect(() => {
     access_token = getCookieByName("access_token");
