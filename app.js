@@ -152,7 +152,7 @@ app.get("/callback", function (req, res) {
         res
           .cookie("access_token", access_token)
           .cookie("refresh_token", refresh_token)
-          .redirect("http://localhost:5000/");
+          .redirect("http://spenius.herokuapp.com/");
 
         // we can also pass the token to the browser to make requests from there
         // res.redirect(
