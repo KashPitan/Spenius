@@ -5,8 +5,6 @@ import axios from "axios";
 
 import About from "./Pages/About";
 import Navbar from "./Components/Layout/Navbar";
-import { Provider } from "react-redux";
-import store from "./store";
 
 //Pages
 import SplashScreen from "./Pages/SplashScreen";
@@ -160,8 +158,6 @@ const App_dev = () => {
       )}
     </>
   );
-  // <Provider store={store}>
-  // </Provider>
 };
 
 export default App_dev;

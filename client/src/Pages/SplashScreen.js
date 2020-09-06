@@ -26,7 +26,9 @@ const SplashScreen = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <a href="http://localhost:8888/login">
+            <a
+              href="http://spenius.herokuapp.com/login" /*http://localhost:8888/login*/
+            >
               {" "}
               <i className="fab fa-spotify"></i> Login to Spotify
             </a>
