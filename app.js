@@ -67,6 +67,7 @@ app
 app.get("/login", function (req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
+  // console.log("test hello");
 
   // your application requests authorization
   var scope = "user-read-private user-read-email user-read-playback-state";
@@ -137,7 +138,8 @@ app.get("/callback", function (req, res) {
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
         var access_token = body.access_token,
-          refresh_token = body.refresh_token;
+          refresh_token = body.refresh_token,
+          expires_in_milli = body.expires_in * 1000;
 
         var options = {
           url: "https://api.spotify.com/v1/me",
@@ -146,17 +148,18 @@ app.get("/callback", function (req, res) {
         };
 
         // use the access token to access the Spotify Web API
-        request.get(options, function (error, response, body) {
-          console.log(body);
-        });
+        request.get(options, function (error, response, body) {});
+
         res
-          .cookie("access_token", access_token)
+          .cookie("access_token", access_token, {
+            expires: new Date(Date.now() + expires_in_milli),
+          })
           .cookie("refresh_token", refresh_token)
           .redirect("http://spenius.herokuapp.com/");
-
         // we can also pass the token to the browser to make requests from there
+
         // res.redirect(
-        //   "/#" +
+        //   "http://localhost:5000/#" +
         //     querystring.stringify({
         //       access_token: access_token,
         //       refresh_token: refresh_token,
@@ -193,10 +196,16 @@ app.get("/refresh_token", function (req, res) {
 
   request.post(authOptions, function (error, response, body) {
     if (!error && response.statusCode === 200) {
-      var access_token = body.access_token;
-      res.cookie("access_token", access_token).send({
-        access_token: access_token,
-      });
+      var access_token = body.access_token,
+        expires_in_milli = body.expires_in * 1000;
+
+      res
+        .cookie("access_token", access_token, {
+          expires: new Date(Date.now() + expires_in_milli),
+        })
+        .send({
+          access_token: access_token,
+        });
     }
   });
 });

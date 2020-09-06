@@ -4,7 +4,6 @@ import getAccessTokenFromCookie from "../Helper-Functions/CookieFunctions";
 const SplashScreen = () => {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    console.log(loading);
     if (getAccessTokenFromCookie()) {
       setLoading(true);
     }

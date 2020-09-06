@@ -22,6 +22,9 @@ var access_token;
 const App_dev = () => {
   const loggedIn = useRef(access_token ? true : false);
   const isSongPlayingBool = useRef(false);
+  const [loggedInState, setLoggedInState] = useState(
+    access_token ? true : false
+  );
 
   const [lyrics, setLyrics] = useState("");
   const [geniusUrl, setGeniusUrl] = useState("");
@@ -30,17 +33,28 @@ const App_dev = () => {
   const [nowPlaying, setNowPlaying] = useState({});
 
   useEffect(() => {
-    access_token = getAccessTokenFromCookie();
-    if (access_token) loggedIn.current = true;
+    checkAccess();
     if (loggedIn.current) {
       setInterval(() => {
-        if (!document.hidden) {
+        if (!document.hidden && access_token) {
           getNowPlaying();
+          checkAccess();
         }
       }, 2000);
     }
     //eslint-disable-next-line
   }, []);
+
+  const checkAccess = () => {
+    access_token = getAccessTokenFromCookie();
+    if (access_token) {
+      loggedIn.current = true;
+      setLoggedInState(true);
+    } else {
+      loggedIn.current = false;
+      setLoggedInState(false);
+    }
+  };
 
   //spotify api call to get the currently playing song
   const getNowPlaying = async () => {
@@ -161,8 +175,6 @@ const App_dev = () => {
       )}
     </>
   );
-  // <Provider store={store}>
-  // </Provider>
 };
 
 export default App_dev;
