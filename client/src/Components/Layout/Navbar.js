@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useRef } from "react";
 // import "../../App.css";
 import "../../navbar.css";
 import { Link } from "react-router-dom";
-import UserContext from "../../Context/UserContext/UserContext";
 
 //functions
 import getCookieByName from "../../Helper-Functions/CookieFunctions";
@@ -10,7 +9,6 @@ import getCookieByName from "../../Helper-Functions/CookieFunctions";
 var access_token;
 
 const Navbar = () => {
-  const userContext = new useContext(UserContext);
   const refreshBool = useRef(access_token ? true : false);
 
   useEffect(() => {
@@ -37,20 +35,21 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div id="connect-button">
+        {/* <div id="connect-button">
           {refreshBool.current ? (
-            <a href="" onClick={userContext.refreshToken}>
+            //<a href="http://spenius.herokuapp.com/refresh_token">
+            <a href="http://localhost:8888/refresh_token">
               {" "}
               <i className="fab fa-spotify"></i> Refresh Connection
             </a>
           ) : (
-            // <a href="http://localhost:8888/login">
-            <a href="http://spenius.herokuapp.com/login">
+            //<a href="http://spenius.herokuapp.com/login">
+            <a href="http://localhost:8888/login">
               {" "}
               <i className="fab fa-spotify"></i> Connect with Spotify
             </a>
           )}
-        </div>
+        </div> */}
       </div>
       <div id="header-text2">
         <h3>

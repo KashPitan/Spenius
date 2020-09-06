@@ -30,7 +30,7 @@ const State = (props) => {
         },
       })
       .then(function (response) {
-        document.cookie = "access_token=" + response.data.access_token;
+        // document.cookie = "access_token=" + response.data.access_token;
       });
   };
 

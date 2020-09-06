@@ -149,10 +149,9 @@ app.get("/callback", function (req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function (error, response, body) {});
-
         res
           .cookie("access_token", access_token, {
-            expires: new Date(Date.now() + 5000),
+            expires: new Date(Date.now() + expires_in_milli),
           })
           .cookie("refresh_token", refresh_token)
           .redirect("http://localhost:5000/");
@@ -203,9 +202,7 @@ app.get("/refresh_token", function (req, res) {
         .cookie("access_token", access_token, {
           expires: new Date(Date.now() + expires_in_milli),
         })
-        .send({
-          access_token: access_token,
-        });
+        .redirect("http://localhost:5000/");
     }
   });
 });
