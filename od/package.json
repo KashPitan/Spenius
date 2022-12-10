@@ -12,7 +12,7 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "express": "~4.16.0",
+    "express": "~4.17.3",
     "genius-api": "^0.4.1",
     "puppeteer": "^2.1.1",
     "querystring": "~0.2.0",
